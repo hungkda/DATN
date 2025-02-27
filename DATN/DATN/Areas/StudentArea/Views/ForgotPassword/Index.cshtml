@@ -1,0 +1,38 @@
+﻿@{
+    ViewData["Title"] = "Index";
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>AdminLTE 3 | Forgot Password</title>
+
+    <link href="~/lib/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="~/css/forgotpassword.css" rel="stylesheet" />
+</head>
+<body class="hold-transition login-page">
+    <div class="forgot-password-container">
+        <div class="card forgot-password-card">
+            <div class="logo">Đặt lại mật khẩu</div>
+            <p class="mb-4">Nhập mã sinh viên của bạn để đặt lại mật khẩu</p>
+            <form asp-action="Index" method="post">
+                <div class="form-group">
+                    <input type="text" class="form-control py-2" name="msv" placeholder="Mã sinh viên" required>
+                </div>
+                <span class="text-danger">@ViewBag.Error</span>
+                <button type="submit" class="btn btn-primary">Gửi liên kết đặt lại mật khẩu</button>
+            </form>
+            <div class="text-center mt-3">
+                <a asp-controller="Login">Trở lại đăng nhập</a>
+            </div>
+        </div>
+    </div>
+    <!-- jQuery -->
+    <script src="~/plugins/jquery/jquery.min.js"></script>
+    <!-- Bootstrap 4 -->
+    <script src="~/lib/bootstrap/dist/js/bootstrap.min.js"></script>
+</body>
+</html>

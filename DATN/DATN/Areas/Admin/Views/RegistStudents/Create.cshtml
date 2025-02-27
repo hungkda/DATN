@@ -1,0 +1,116 @@
+﻿@model DATN.Models.RegistStudent
+
+@{
+    ViewData["Title"] = "Create";
+    Layout = "~/Areas/Admin/Views/Shared/Admin.cshtml";
+}
+
+<h1 class="py-3">Thêm mới thông tin đăng ký học phần</h1>
+
+<hr />
+<div class="row">
+    <div class="col-12">
+        <form asp-action="Create" method="post">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="row">
+                <div class="col-6">
+                    <div class="form-group">
+                        <label class="control-label">Tên lớp</label>
+                        <select id="Class" class="form-control" asp-items="ViewBag.Class"></select>
+                    </div>
+                    <div class="form-group">
+                        <input type="checkbox" id="select-all" />
+                        <label for="select-all">Chọn tất cả</label>
+                    </div>
+                    <div class="form-group" id="student">
+                        <!-- Checkbox danh sách học sinh được tạo động -->
+                    </div>
+                </div>
+                <div class="col-6">
+                    <div class="form-group">
+                        <label asp-for="DetailTerm" class="control-label">Tên lớp học phần</label>
+                        <select asp-for="DetailTerm" class="form-control" asp-items="ViewBag.DetailTerm"></select>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="Relearn" class="control-label">Số lần học</label>
+                        <input asp-for="Relearn" class="form-control" />
+                        <span asp-validation-for="Relearn" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="Status" class="control-label">Trạng thái</label>
+                        <select asp-for="Status" class="form-select" aria-label="Default select example">
+                            <option value="true">True</option>
+                            <option value="false">False</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-primary" />
+                <a asp-action="Index" class="btn btn-secondary">Back to List</a>
+            </div>
+        </form>
+    </div>
+</div>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script type="text/javascript">
+    $(document).ready(function () {
+        function loadStudents(classId) {
+            $.ajax({
+                url: '@Url.Action("GetStudentsByClass", "RegistStudents")',
+                type: 'GET',
+                data: { classId: classId },
+                success: function (response) {
+                    var studentContainer = $('#student');
+                    studentContainer.empty(); // Xóa nội dung cũ
+                    // Thêm các checkbox
+                    $.each(response, function (index, student) {
+                        studentContainer.append(`
+                                <div>
+                                    <input type="checkbox" class="student-checkbox" name="registStudents[${index}].Student" id="student_${student.id}" value="${student.id}" />
+                                    <label for="student_${student.id}">${student.name}</label>
+                                </div>
+                            `);
+                    });
+
+                    // Reset trạng thái của nút "Select All" mỗi khi danh sách được tải
+                    $('#select-all').prop('checked', false);
+                },
+                error: function () {
+                    alert("Có lỗi xảy ra khi tải danh sách học sinh.");
+                }
+            });
+        }
+
+        // Tải danh sách học sinh của lớp 1 khi trang load
+        var a = $('#Class').val();
+        loadStudents(a);
+
+        // Khi thay đổi lớp, tải lại danh sách học sinh
+        $(document).on('change', '#Class', function () {
+            var selectedValue = $(this).val();
+            loadStudents(selectedValue);
+        });
+
+        // Xử lý sự kiện "Select All"
+        $(document).on('change', '#select-all', function () {
+            var isChecked = $(this).is(':checked');
+            $('.student-checkbox').prop('checked', isChecked);
+        });
+
+        // Cập nhật trạng thái của "Select All" khi thay đổi checkbox
+        $(document).on('change', '.student-checkbox', function () {
+            var allChecked = $('.student-checkbox').length === $('.student-checkbox:checked').length;
+            $('#select-all').prop('checked', allChecked);
+        });
+    });
+
+
+
+
+</script>
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

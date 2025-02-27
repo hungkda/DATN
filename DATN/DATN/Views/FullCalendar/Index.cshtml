@@ -1,0 +1,59 @@
+﻿@model IEnumerable<DATN.ViewModels.FullCalendarVM>
+@{
+    var eventsJson = System.Text.Json.JsonSerializer.Serialize(Model);
+}
+
+<!DOCTYPE html>
+<html lang='en'>
+<head>
+    <meta charset='utf-8' />
+    <link href="~/plugins/fullcalendar/main.css" rel="stylesheet">
+    <style>
+        .fc-event {
+            font-size: 0.85em;
+        }
+
+        .fc-event-title {
+            white-space: pre-line; /* Ensure the newline characters are interpreted as line breaks */
+        }
+
+    </style>
+</head>
+<body>
+    <div class="container mt-5">
+        <div id="calendar"></div>
+    </div>
+    <script src="~/plugins/fullcalendar/main.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            var calendarEl = document.getElementById('calendar');
+            var calendar = new FullCalendar.Calendar(calendarEl, {
+                initialView: 'dayGridMonth',
+                headerToolbar: {
+                    left: 'prev,next today',
+                    center: 'title',
+                    right: 'dayGridMonth,dayGridWeek'
+                }
+
+            });
+            var events = @Html.Raw(eventsJson);
+            calendar.batchRendering(function () {
+                events.forEach(function (event) {
+                    calendar.addEvent({
+                        title: event.Name + '\n'
+                        + event.TimeStart + ' - ' + event.TimeEnd
+                        +'\nPhòng: '+ event.Room,
+                        /*url: '/Attendance',*/
+                        start: event.DateOnly
+                    });
+
+                });
+            });
+
+            calendar.render();
+        });
+
+
+    </script>
+</body>
+</html>

@@ -1,0 +1,103 @@
+﻿@model X.PagedList.IPagedList<DATN.Models.DetailAttendance>
+@using X.PagedList.Mvc.Core
+
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Areas/Admin/Views/Shared/Admin.cshtml";
+    var Term = ViewBag.Term;
+    var stt = 0;
+}
+
+<h1 class="py-3">Danh sách ngày học</h1>
+
+<table class="table table-bordered table-hover bg-white">
+    <thead>
+        <tr>
+            <th>
+                STT
+            </th>
+            
+            <th>
+                Id ngày học
+            </th>
+            <th>
+                Tên môn học
+            </th>
+            <th>
+                Id điểm danh
+            </th>
+            <th>
+                Đầu giờ
+            </th>
+            <th>
+                Cuối giờ
+            </th>
+            <th>
+                Ghi chú
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            stt++;
+            <tr>
+                <th>
+                    @stt
+                </th>
+                
+                <td>
+                    @Html.DisplayFor(modelItem => item.DateLearnNavigation.Id)
+                </td>
+                <td>
+                    @foreach (var itemTerm in Term)
+                    {
+                        if (item.DetailTermNavigation.Term == itemTerm.Id)
+                        {
+                            @itemTerm.Name
+                        }
+                    }
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.IdAttendanceNavigation.Id)
+                </td>
+                <td>
+                    @if(item.BeginClass == 1)
+                    {
+                        <text>Có mặt</text>
+                    }
+                    else if (item.BeginClass == 2)
+                    {
+                        <text>Vắng</text>
+                    }
+                    else if (item.BeginClass == 3)
+                    {
+                        <text>Có phép</text>
+                    }
+                </td>
+                <td>
+                    @if (item.EndClass == 1)
+                    {
+                        <text>Có mặt</text>
+                    }
+                    else if (item.EndClass == 2)
+                    {
+                        <text>Vắng</text>
+                    }
+                    else if (item.EndClass == 3)
+                    {
+                        <text>Có phép</text>
+                    }
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Description)
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+@Html.PagedListPager(Model, page => Url.Action("Index", new { page = page }), new X.PagedList.Web.Common.PagedListRenderOptions
+{
+    LiElementClasses = new string[] { "page-item" },
+    PageClasses = new string[] { "page-link" }
+})

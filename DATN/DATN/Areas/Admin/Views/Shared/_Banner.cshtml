@@ -1,0 +1,198 @@
+﻿<nav class="mt-2">
+    <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
+        <li class="nav-item">
+            <a asp-controller="Dashboard" asp-action="Index" class="nav-link">
+                <i class="nav-icon fas fa-th"></i>
+                <p>Trang chính</p>
+            </a>
+        </li>
+
+        <li class="nav-item">
+            <a asp-controller="Majors" asp-action="Index" class="nav-link">
+                <i class="nav-icon fas fa-th"></i>
+                <p>Chuyên ngành</p>
+            </a>
+        </li>
+
+        <li class="nav-item">
+            @* menu-open *@
+            <a asp-controller="Staffs" asp-action="Index" class="nav-link">
+                <i class="nav-icon fas fa-user"></i>
+                <p>
+                    Giảng viên
+                    <i class="right fas fa-angle-left"></i>
+                </p>
+            </a>
+            <ul class="nav nav-treeview">
+                <li class="nav-item">
+                    <a asp-controller="Staffs" asp-action="Index" class="nav-link">
+                        <i class="far fa-circle nav-icon"></i>
+                        <p>Thông tin</p>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a asp-controller="UserStaffs" asp-action="Index" class="nav-link">
+                        <i class="far fa-circle nav-icon"></i>
+                        <p>Tài khoản</p>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a asp-controller="Positions" asp-action="Index" class="nav-link">
+                        <i class="far fa-circle nav-icon"></i>
+                        <p>Chức vụ</p>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a asp-controller="Subjects" asp-action="Index" class="nav-link">
+                        <i class="far fa-circle nav-icon"></i>
+                        <p>Bộ môn</p>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a asp-controller="StaffSubjects" asp-action="Index" class="nav-link">
+                        <i class="far fa-circle nav-icon"></i>
+                        <p>Giảng viên thuộc bộ môn</p>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a asp-controller="TeachingAssignments" asp-action="Index" class="nav-link">
+                        <i class="far fa-circle nav-icon"></i>
+                        <p>Phân công giảng dạy</p>
+                    </a>
+                </li>
+            </ul>
+        </li>
+
+        <li class="nav-item">
+            @* menu-open *@
+            <a asp-controller="Students" asp-action="Index" class="nav-link">
+                <i class="nav-icon fas fa-user-graduate"></i>
+                <p>
+                    Sinh viên
+                    <i class="right fas fa-angle-left"></i>
+                </p>
+            </a>
+            <ul class="nav nav-treeview">
+                <li class="nav-item">
+                    <a asp-controller="Students" asp-action="Index" class="nav-link">
+                        <i class="far fa-circle nav-icon"></i>
+                        <p>Thông tin</p>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a asp-controller="UserStudents" asp-action="Index" class="nav-link">
+                        <i class="far fa-circle nav-icon"></i>
+                        <p>Tài khoản</p>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a asp-controller="Sessions" asp-action="Index" class="nav-link">
+                        <i class="far fa-circle nav-icon"></i>
+                        <p>Niên khóa</p>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a asp-controller="Classes" asp-action="Index" class="nav-link">
+                        <i class="far fa-circle nav-icon"></i>
+                        <p>Lớp</p>
+                    </a>
+                </li>
+            </ul>
+        </li>
+
+        <li class="nav-item">
+            <a asp-controller="RegistStudents" asp-action="Index" class="nav-link">
+                <i class="nav-icon fas fa-registered"></i>
+                <p>Thông tin đk học phần</p>
+            </a>
+        </li>
+
+        <li class="nav-item">
+            @* menu-open *@
+            <a asp-controller="Terms" asp-action="Index" class="nav-link">
+                <i class="nav-icon fas fa-book"></i>
+                <p>
+                    Học phần
+                    <i class="right fas fa-angle-left"></i>
+                </p>
+            </a>
+            <ul class="nav nav-treeview">
+                <li class="nav-item">
+                    <a asp-controller="Terms" asp-action="Index" class="nav-link">
+                        <i class="far fa-circle nav-icon"></i>
+                        <p>Danh sách học phần</p>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a asp-controller="Semesters" asp-action="Index" class="nav-link">
+                        <i class="far fa-circle nav-icon"></i>
+                        <p>Học kỳ</p>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a asp-controller="DetailTerms" asp-action="Index" class="nav-link">
+                        <i class="far fa-circle nav-icon"></i>
+                        <p>Chi tiết học phần</p>
+                    </a>
+                </li>
+            </ul>
+        </li>
+
+        <li class="nav-item">
+            @* menu-open *@
+            <a asp-controller="Attendance" asp-action="Index" class="nav-link">
+                <i class="nav-icon fas fa-tachometer-alt"></i>
+                <p>
+                    Điểm danh
+                    <i class="right fas fa-angle-left"></i>
+                </p>
+            </a>
+            <ul class="nav nav-treeview">
+                <li class="nav-item">
+                    <a asp-controller="Attendances" asp-action="Index" class="nav-link">
+                        <i class="far fa-circle nav-icon"></i>
+                        <p>Thông tin điểm danh</p>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a asp-controller="DetailAttendances" asp-action="Index" class="nav-link">
+                        <i class="far fa-circle nav-icon"></i>
+                        <p>Chi tiết điểm danh</p>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a asp-controller="DateLearns" asp-action="Index" class="nav-link">
+                        <i class="far fa-circle nav-icon"></i>
+                        <p>Ngày học</p>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a asp-controller="Rooms" asp-action="Index" class="nav-link">
+                        <i class="far fa-circle nav-icon"></i>
+                        <p>Phòng học</p>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a asp-controller="Timelines" asp-action="Index" class="nav-link">
+                        <i class="far fa-circle nav-icon"></i>
+                        <p>Ca học</p>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a asp-controller="Years" asp-action="Index" class="nav-link">
+                        <i class="far fa-circle nav-icon"></i>
+                        <p>Năm học</p>
+                    </a>
+                </li>
+            </ul>
+        </li>
+
+        <li class="nav-item">
+            <a asp-controller="PointProcesses" asp-action="Index" class="nav-link">
+                <i class="nav-icon fas fa-th"></i>
+                <p>Bảng điểm</p>
+            </a>
+        </li>
+
+    </ul>
+</nav>

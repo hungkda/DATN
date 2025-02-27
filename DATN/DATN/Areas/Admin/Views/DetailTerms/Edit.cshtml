@@ -1,0 +1,80 @@
+﻿@model DATN.Models.DetailTerm
+
+@{
+    ViewData["Title"] = "Edit";
+    Layout = "~/Areas/Admin/Views/Shared/Admin.cshtml";
+}
+
+<h1 class="py-3">Sửa thông tin chi tiết học phần</h1>
+
+<div class="row">
+    <div class="col-md-6">
+        <form asp-action="Edit">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="Id" />
+            <div class="form-group">
+                <label class="control-label">Tên học phần</label>
+                <select asp-for="Term" class="form-control" asp-items="ViewBag.Term"></select>
+            </div>
+            <div class="form-group">
+                <label class="control-label">Tên học kì</label>
+                <select asp-for="Semester" class="form-control" asp-items="ViewBag.Semester"></select>
+            </div>
+            <div class="form-group">
+                <label class="control-label">Tên lớp học phần</label>
+                <input asp-for="TermClass" class="form-control" />
+                <span asp-validation-for="TermClass" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label class="control-label">Ngày bắt đầu</label>
+                <input asp-for="StartDate" class="form-control" />
+                <span asp-validation-for="StartDate" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label class="control-label">Ngày kết thúc</label>
+                <input asp-for="EndDate" class="form-control" />
+                <span asp-validation-for="EndDate" class="text-danger"></span>
+            </div>
+            
+            <div class="form-group">
+                <label class="control-label">Số SV tối đa</label>
+                <input asp-for="MaxNumber" class="form-control" />
+                <span asp-validation-for="MaxNumber" class="text-danger"></span>
+            </div>
+            <div class="form-group d-none">
+                <label asp-for="CreateBy" class="control-label"></label>
+                <input asp-for="CreateBy" class="form-control" />
+                <span asp-validation-for="CreateBy" class="text-danger"></span>
+            </div>
+            <div class="form-group d-none">
+                <label asp-for="CreateDate" class="control-label"></label>
+                <input asp-for="CreateDate" class="form-control" />
+                <span asp-validation-for="CreateDate" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label class="control-label">Xác nhận xóa</label>
+                <select asp-for="IsDelete" class="form-select" aria-label="Default select example">
+                    <option value="true">Yes</option>
+                    <option value="false">No</option>
+                </select>
+                <span asp-validation-for="IsDelete" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label class="control-label">Hiển thị</label>
+                <select asp-for="IsActive" class="form-select" aria-label="Default select example">
+                    <option value="true">Active</option>
+                    <option value="false">Inactive</option>
+                </select>
+                <span asp-validation-for="IsActive" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Save" class="btn btn-primary" />
+                <a asp-action="Index" class="btn btn-secondary">Back to List</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

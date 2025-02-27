@@ -1,0 +1,32 @@
+﻿@model DATN.Models.StaffSubject
+
+@{
+    ViewData["Title"] = "Create";
+    Layout = "~/Areas/Admin/Views/Shared/Admin.cshtml";
+}
+
+<h1 class="py-3">Thêm mới giảng viên thuộc bộ môn</h1>
+
+<div class="row">
+    <div class="col-md-6">
+        <form asp-action="Create">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label class="control-label">Giảng viên</label>
+                <select asp-for="Staff" class ="form-control" asp-items="ViewBag.Staff"></select>
+            </div>
+            <div class="form-group">
+                <label class="control-label">Bộ môn</label>
+                <select asp-for="Subject" class ="form-control" asp-items="ViewBag.Subject"></select>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-primary" />
+                <a asp-action="Index" class="btn btn-secondary">Back to List</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

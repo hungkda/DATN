@@ -1,0 +1,85 @@
+﻿@model IEnumerable<DATN.ViewModels.StaffIndex>
+@{
+    ViewData["Title"] = "Home Page";
+    var stt = 0;
+}
+
+<div class="container mt-5 p-4 bg-white rounded shadow">
+    <form action="" method="get" class="input-group mb-4">
+        <input type="text" class="form-control" name="name" id="keyword" placeholder="Tìm kiếm...">
+        <button class="btn btn-outline-secondary" type="submit"><i class="fas fa-search"></i></button>
+    </form>
+
+    <div class="mb-4 p-3 bg-light rounded d-flex justify-content-between">
+        <div class="row">
+            <div class="col"><strong>Mã giảng viên:</strong> @ViewBag.StaffInfo.StaffCode</div>
+        </div>
+        <div class="row">
+            <div class="col"><strong>Tên giảng viên:</strong> @ViewBag.StaffInfo.StaffName</div>
+        </div>
+        <div class="row">
+            <div class="col"><strong>Bộ môn:</strong> @ViewBag.StaffInfo.SubjectName</div>
+        </div>
+    </div>
+
+    <div class="row bg-primary text-white py-2 rounded-top mx-0">
+        <div class="col-1">STT</div>
+        <div class="col-2">Mã HP</div>
+        <div class="col-3">Tên HP</div>
+        <div class="col-2">Số sinh viên ĐK</div>
+        <div class="col-2">Số lớp</div>
+        <div class="col-1">Số TC</div>
+        <div class="col-1"></div>
+    </div>
+
+    <!-- Course List Items -->
+    @foreach (var item in Model)
+    {
+        stt++;
+        <div class="row bg-light py-2 border-bottom mx-0">
+            <div class="col-1">@stt</div>
+            <div class="col-2">@item.TermCode</div>
+            <div class="col-3">@item.TermName</div>
+            <div class="col-2">
+                @item.StudentNumber
+            </div>
+            <div class="col-2">
+                @item.TermClassNumber
+            </div>
+            <div class="col-1">@item.CollegeCredit</div>
+            <div class="col-1 text-center">
+                <a class="btn btn-outline-primary btn-sm" asp-action="AttendanceSheet" asp-route-id="@item.TermId">
+                    <i class="fa-solid fa-angles-right"></i>
+                </a>
+            </div>
+        </div>
+    }
+</div>
+
+@if (TempData["SuccessMessage"] != null)
+{
+    <div class="position-fixed top-0 end-0 p-3" style="z-index: 5">
+        <div class="toast bg-success text-light" id="loginSuccessToast" role="alert" aria-live="assertive" aria-atomic="true">
+            <div class="toast-header">
+                <strong class="me-auto">Thông báo</strong>
+                <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+            </div>
+            <div class="toast-body">
+                @TempData["SuccessMessage"]
+            </div>
+        </div>
+    </div>
+}
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        var toastElement = document.getElementById('loginSuccessToast');
+        var toast = new bootstrap.Toast(toastElement);
+        toast.show();
+
+        // Đóng notification sau 5 giây
+        setTimeout(function () {
+            toast.hide();
+        }, 5000); // 5000 milliseconds = 5 seconds
+    });
+</script>

@@ -1,0 +1,96 @@
+﻿@model DATN.Models.Attendance
+
+@{
+    ViewData["Title"] = "Details";
+    Layout = "~/Areas/Admin/Views/Shared/Admin.cshtml";
+}
+
+<h1>Thông tin chi tiết điểm danh</h1>
+
+<div>
+    <div class="col-md-6">
+        <div class="form-group">
+            <label asp-for="Id" class="control-label">Id</label>
+            <input asp-for="Id" class="form-control" readonly />
+            <span asp-validation-for="Id" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <label asp-for="RegistStudent" class="control-label">ID đăng ký học phần</label>
+            <input asp-for="RegistStudent" class="form-control" readonly />
+            <span asp-validation-for="RegistStudent" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <label asp-for="Student" class="control-label">Tên sinh viên</label>
+            <select asp-for="Student" class="form-control" readonly asp-items="ViewBag.Student"></select>
+            <span asp-validation-for="Student" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <label asp-for="DetailTerm" class="control-label">Tên học phần</label>
+            <select asp-for="DetailTerm" class="form-control" readonly asp-items="ViewBag.DetailTerm"></select>
+            <span asp-validation-for="DetailTerm" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <label asp-for="Status" class="control-label">Trạng thái</label>
+            <input class="form-control" readonly @if (Model.Status == true)
+            {
+                <text>value="True"</text>
+            }
+            else
+            {
+                <text>value="False"</text>
+            }
+            />
+            <span asp-validation-for="Status" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <label asp-for="CreateBy" class="control-label">Người tạo</label>
+            <input asp-for="CreateBy" class="form-control" readonly />
+            <span asp-validation-for="CreateBy" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <label asp-for="UpdateBy" class="control-label">Người cập nhật</label>
+            <input asp-for="UpdateBy" class="form-control" readonly />
+            <span asp-validation-for="UpdateBy" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <label asp-for="CreateDate" class="control-label">Ngày tạo</label>
+            <input asp-for="CreateDate" class="form-control" readonly />
+            <span asp-validation-for="CreateDate" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <label asp-for="UpdateDate" class="control-label">Ngày cập nhật</label>
+            <input asp-for="UpdateDate" class="form-control" readonly />
+            <span asp-validation-for="UpdateDate" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <label asp-for="IsDelete" class="control-label">Xác nhận xóa</label>
+            <input class="form-control" readonly @if (Model.IsDelete == true)
+            {
+                <text>value="Yes"</text>
+            }
+            else
+            {
+                <text>value="No"</text>
+            }
+            />
+            <span asp-validation-for="IsDelete" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <label asp-for="IsActive" class="control-label">Hiển thị</label>
+            <input class="form-control" readonly @if (Model.IsActive == true)
+            {
+                <text>value="Active"</text>
+            }
+            else
+            {
+                <text>value="Inactive"</text>
+            }
+            />
+            <span asp-validation-for="IsActive" class="text-danger"></span>
+        </div>
+    </div>
+</div>
+<div>
+    <a asp-action="Edit" asp-route-id="@Model?.Id" class="btn btn-warning">Edit</a>
+    <a asp-action="Index" class="btn btn-secondary">Back to List</a>
+</div>

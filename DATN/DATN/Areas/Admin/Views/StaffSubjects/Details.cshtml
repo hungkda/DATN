@@ -1,0 +1,94 @@
+﻿@model DATN.Models.StaffSubject
+
+@{
+    ViewData["Title"] = "Details";
+    Layout = "~/Areas/Admin/Views/Shared/Admin.cshtml";
+}
+
+<h1 class="py-3">Thông tin giảng viên của bộ môn</h1>
+
+<div class="row">
+    <div class="col-md-6">
+        <form asp-action="Edit">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="Id" class="control-label"></label>
+                <input asp-for="Id" class="form-control" readonly></input>
+                <span asp-validation-for="Staff" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Staff" class="control-label">Tên giảng viên</label>
+                <select asp-for="Staff" class="form-control" readonly asp-items="ViewBag.Staff"></select>
+                <span asp-validation-for="Staff" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Subject" class="control-label">Tên bộ môn</label>
+                <select asp-for="Subject" class="form-control" readonly asp-items="ViewBag.Subject"></select>
+                <span asp-validation-for="Subject" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label class="control-label">Trạng thái</label>
+                <input class="form-control" readonly @if (Model.Status == true)
+                {
+                    <text>value="Active"</text>
+                }
+                else
+                {
+                    <text>value="Inactive"</text>
+                }
+                />
+                <span asp-validation-for="Status" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="CreateBy" class="control-label">Người tạo</label>
+                <input asp-for="CreateBy" readonly class="form-control" />
+                <span asp-validation-for="CreateBy" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="UpdateBy" class="control-label">Người cập nhật</label>
+                <input asp-for="UpdateBy" readonly class="form-control" />
+                <span asp-validation-for="UpdateBy" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="CreateDate" class="control-label">Ngày tạo</label>
+                <input asp-for="CreateDate" readonly class="form-control" />
+                <span asp-validation-for="CreateDate" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="UpdateDate" class="control-label">Ngày cập nhật</label>
+                <input asp-for="UpdateDate" readonly class="form-control" />
+                <span asp-validation-for="UpdateDate" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label class="control-label">Xác nhận xóa</label>
+                <input class="form-control" readonly @if (Model.IsDelete == true)
+                {
+                    <text>value="Yes"</text>
+                }
+                else
+                {
+                    <text>value="No"</text>
+                }
+                />
+                <span asp-validation-for="IsDelete" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label class="control-label">Hiển thị</label>
+                <input class="form-control" readonly @if (Model.IsActive == true)
+                {
+                    <text>value="Active"</text>
+                }
+                else
+                {
+                    <text>value="Inactive"</text>
+                }
+                />
+                <span asp-validation-for="IsActive" class="text-danger"></span>
+            </div>
+        </form>
+    </div>
+</div>
+<div>
+    <a asp-action="Edit" asp-route-id="@Model?.Id" class="btn btn-warning">Edit</a>
+    <a asp-action="Index" class="btn btn-secondary">Back to List</a>
+</div>

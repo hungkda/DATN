@@ -1,0 +1,81 @@
+﻿@model X.PagedList.IPagedList<DATN.Models.PointProcess>
+@using X.PagedList.Mvc.Core
+
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Areas/Admin/Views/Shared/Admin.cshtml";
+    var stt = 0;
+}
+
+<h1 class="py-3">Danh sách điểm thi</h1>
+
+<table class="table table-bordered table-hover bg-white">
+    <thead>
+        <tr>
+            <th>
+                STT
+            </th>
+            <th>
+                Điểm tổng kết
+            </th>
+            <th>
+                Tên giảng viên
+            </th>
+            <th>
+                Tên học sinh
+            </th>
+            <th>
+                Lớp học phần
+            </th>
+            <th>
+                Trạng thái
+            </th>
+            <th>
+                Tác vụ
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            stt++;
+            <tr>
+                <th>
+                    @stt
+                </th>
+                <td>
+                    @Html.DisplayFor(modelItem => item.OverallScore)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.IdStaffNavigation.Name)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.StudentNavigation.Name)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.DetailTermNavigation.TermClass)
+                </td>
+                <td>
+                    @if (item.Status == true)
+                    {
+                        <span class="text-success">Đạt</span>
+                    }
+                    else
+                    {
+                        <span class="text-danger">Học lại</span>
+                    }
+                </td>
+
+
+                <td>
+                    <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-success btn-event"><i class="fas fa-info-circle"></i></a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+@Html.PagedListPager(Model, page => Url.Action("Index", new { page = page }), new X.PagedList.Web.Common.PagedListRenderOptions
+{
+    LiElementClasses = new string[] { "page-item" },
+    PageClasses = new string[] { "page-link" }
+})

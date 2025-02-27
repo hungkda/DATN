@@ -1,0 +1,108 @@
+﻿@model IEnumerable<DATN.Areas.StudentArea.ViewModels.StudentScore>
+
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Areas/StudentArea/Views/Shared/_Layout.cshtml";
+    double? point10 = 0;
+    int? countPoint10 = 0;
+    double? point4 = 0;
+    int? countPoint4 = 0;
+    double? collegeCredit4 = 0;
+    int? countCollegeCredit4 = 0;
+    var relearnNumber = 0;
+    int? collegeCreditNumber = 0;
+    var waitNumber = 0;
+
+    // Tính tổng điểm và số tín chỉ tích lũy
+    foreach (var item in Model)
+    {
+        if (item.PointRange10 != null)
+        {
+            point10 += item.PointRange10 * item.CollegeCredit;
+            countPoint10 += item.CollegeCredit;
+        }
+
+        if (item.PointRange4 != null)
+        {
+            point4 += item.PointRange4 * item.CollegeCredit;
+            countPoint4 += item.CollegeCredit;
+        }
+
+        if (item.PointRange4 != null)
+        {
+            collegeCredit4 += item.PointRange4 * item.CollegeCredit;
+            countCollegeCredit4 += item.CollegeCredit;
+        }
+
+
+        if (item.PointRange4 == 0)
+        {
+            relearnNumber++;
+        }
+
+        if(item.PointRange4 >= 1 && item.PointRange4 != null)
+        {
+            collegeCreditNumber += item.CollegeCredit;
+        }
+
+        if(item.PointRange4 == null)
+        {
+            waitNumber++;
+        }
+    }
+
+    // Tính trung bình điểm hệ 10
+    double? averagePoint10 = point10 / countPoint10;
+
+    // Tính trung bình điểm hệ 4
+    double? averagePoint4 = point4 / countPoint4;
+
+    // Tính trung bình cộng tích lũy hệ 4
+    double? cumulativeAveragePoint4 = collegeCredit4 / countCollegeCredit4;
+}
+
+<h2>Bảng điểm cá nhân</h2>
+
+<div class="container mt-4">
+    <div class="row mb-3">
+        <div class="col-6">
+            @* <p>TBC tích lũy thang điểm 4: @cumulativeAveragePoint4?.ToString("0.00")</p> *@
+            <p>TBC học tập thang điểm 4: @averagePoint4?.ToString("0.00")</p>
+            <p>TBC học tập thang điểm 10: @averagePoint10?.ToString("0.00")</p>
+            <p>Số môn thi lại: @relearnNumber</p>
+            <p>Số môn học lại: 0</p>
+        </div>
+        <div class="col-6">
+            @* <p>Xếp hạng học lực: @(cumulativeAveragePoint4 >= 3.6 ? "Xuất Sắc" : (cumulativeAveragePoint4 >= 3.2 ? "Giỏi" : (cumulativeAveragePoint4 >= 2.5 ? "Khá" : (cumulativeAveragePoint4 >= 2.0 ? "Trung Bình" : (cumulativeAveragePoint4 >= 1.0 ? "Yếu" : "Kém")))))</p> *@
+            <p>Xếp loại học tập thang 4: @(averagePoint4 >= 3.6 ? "Xuất Sắc" : (averagePoint4 >= 3.2 ? "Giỏi" : (averagePoint4 >= 2.5 ? "Khá" : (averagePoint4 >= 2.0 ? "Trung Bình" : (averagePoint4 >= 1.0 ? "Yếu" : "Kém")))))</p>
+            <p>Xếp loại học tập thang 10: @(averagePoint10 >= 9.0 ? "Xuất Sắc" : (averagePoint10 >= 8.0 ? "Giỏi" : (averagePoint10 >= 7.0 ? "Khá" : (averagePoint10 >= 5.0 ? "Trung Bình" : (averagePoint10 >= 4.0 ? "Yếu" : "Kém")))))</p>
+            <p>Số tín chỉ đã tích lũy: @collegeCreditNumber</p>
+            <p>Số môn chờ điểm: @waitNumber</p>
+        </div>
+    </div>
+
+    <div class="row text-center bg-primary font-weight-bold">
+        <div class="col-1 border">Học kỳ</div>
+        <div class="col-2 border">Mã học phần</div>
+        <div class="col-4 border">Tên học phần</div>
+        <div class="col-1 border">Số tín chỉ</div>
+        <div class="col-1 border">Thang điểm 10</div>
+        <div class="col-1 border">Thang điểm 4</div>
+        <div class="col-1 border">Thang điểm chữ</div>
+        <div class="col-1 border"></div>
+    </div>
+
+    @foreach (var item in Model)
+    {
+        <div class="row text-center">
+            <div class="col-1 border">@item.Semester</div>
+            <div class="col-2 border">@item.TermCode</div>
+            <div class="col-4 border">@item.TermName</div>
+            <div class="col-1 border">@item.CollegeCredit</div>
+            <div class="col-1 border">@item.PointRange10</div>
+            <div class="col-1 border">@item.PointRange4</div>
+            <div class="col-1 border">@(item.PointRange4 == 4 ? "A" : (item.PointRange4 == 3 ? "B" : (item.PointRange4 == 2 ? "C" : (item.PointRange4 == 1 ? "D" : (item.PointRange4 == null ? null : "F")))))</div>
+            <div class="col-1 border"><a asp-action="ScoreDetail" asp-route-id="@item.DetailTermId">Chi tiết</a></div>
+        </div>
+    }
+</div>

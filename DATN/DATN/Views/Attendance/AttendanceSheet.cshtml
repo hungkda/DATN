@@ -1,0 +1,59 @@
+﻿@model IEnumerable<DATN.ViewModels.AttendanceSheet>
+@{
+    ViewData["Title"] = "AttendanceSheet";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    var datelearns = ViewBag.dateLearn;
+    var stt = 0;
+}
+
+
+<h1 class="py-3">Học phần: @ViewBag.TermName</h1>
+
+<div class="container mt-5" id="viewToUpdate">
+    @Html.Partial("PartialBodyAttendanceSheet")
+</div>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script type="text/javascript">
+    $(document).ready(function () {
+        // Khởi tạo hàm cập nhật chiều cao khi tải trang
+        updateHeights();
+        // Gọi hàm updateHeights khi kích thước cửa sổ thay đổi
+        window.onresize = updateHeights;
+        // Xử lý sự kiện thay đổi dropdown #choosetermclass
+        $(document).on('change', '#choosetermclass', function () {
+            var selectedValue = $(this).val();
+            $.ajax({
+                url: '@Url.Action("AttendanceSheet", "Attendance")',
+                type: 'GET',
+                data: { idselect: selectedValue },
+                success: function (response) {
+                    // Cập nhật lại nội dung của #viewToUpdate với HTML được trả về từ server
+                    $('#viewToUpdate').html(response);
+                    $('#choosetermclass').val(selectedValue);
+                    updateHeights();
+                },
+                error: function (error) {
+                    // Xử lý lỗi
+                    alert("An error occurred!");
+                }
+            });
+        });
+        // Hàm cập nhật chiều cao của các phần tử
+        function updateHeights() {
+            var count = document.querySelectorAll('.item-js').length; // Thay .your-element-class bằng lớp CSS của các phần tử cần cập nhật chiều cao
+            for (let i = 1; i <= count; i++) {
+                var element = document.getElementById('item-' + i);
+                var elementday = document.getElementById('date-' + i);
+                // Kiểm tra sự tồn tại của các phần tử
+                if (element && elementday) {
+                    // Cập nhật chiều cao của elementday theo chiều cao của element
+                    elementday.style.height = element.offsetHeight + 'px';
+                }
+            }
+        }
+
+    });
+
+
+</script>

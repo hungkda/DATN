@@ -1,0 +1,71 @@
+﻿@model DATN.Areas.Admin.Models.Login
+
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Amin Login</title>
+    <link href="~/lib/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="~/css/adminlogin.css" rel="stylesheet" />
+</head>
+<body class="hold-transition login-page">
+    <div class="login-container">
+        <div class="card login-card">
+            <div class="logo">MyAdmin</div>
+            <h4 class="card-title text-center mb-4">Welcome Back</h4>
+            <form action="" method="post">
+                <div class="form-group mb-3">
+                    <label class="mb-2" for="username">Tài khoản</label>
+                    <input type="email" class="form-control" id="username" placeholder="Nhập tài khoản" asp-for="Email" value="chungtrinhj@gmail.com">
+                    <span asp-validation-for="Email"></span>
+                </div>
+                <div class="form-group mb-3">
+                    <label class="mb-2" for="password">Mật khẩu</label>
+                    <input type="password" class="form-control" id="password" placeholder="Nhập mật khẩu" asp-for="Password" value="0123456789">
+                    <span asp-validation-for="Password"></span>
+                </div>
+                <button type="submit" class="btn btn-primary btn-block my-3 w-100">Đăng nhập</button>
+            </form>
+        </div>
+    </div>
+
+    @if (TempData["ErrorMessage"] != null)
+    {
+        <div class="position-fixed top-0 end-0 p-3" style="z-index: 5">
+            <div class="toast bg-danger text-light" id="loginErrorToast" role="alert" aria-live="assertive" aria-atomic="true">
+                <div class="toast-header">
+                    <strong class="me-auto">Thông báo</strong>
+                    <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+                </div>
+                <div class="toast-body">
+                    @TempData["ErrorMessage"]
+                </div>
+            </div>
+        </div>
+    }
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            var toastElement = document.getElementById('loginErrorToast');
+            var toast = new bootstrap.Toast(toastElement);
+            toast.show();
+
+            // Đóng notification sau 5 giây
+            setTimeout(function () {
+                toast.hide();
+            }, 5000); // 5000 milliseconds = 5 seconds
+        });
+    </script>
+
+    <!-- jQuery -->
+    <script src="~/plugins/jquery/jquery.min.js"></script>
+    <!-- Bootstrap 4 -->
+    <script src="~/lib/bootstrap/dist/js/bootstrap.min.js"></script>
+</body>
+</html>
+

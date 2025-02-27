@@ -1,0 +1,80 @@
+﻿@model IEnumerable<DATN.ViewModels.FullCalendarVM>
+@{
+    var eventsJson = System.Text.Json.JsonSerializer.Serialize(Model);
+}
+
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Areas/StudentArea/Views/Shared/_Layout.cshtml";
+}
+
+<!DOCTYPE html>
+<html lang='en'>
+<head>
+    <meta charset='utf-8' />
+    <link href="~/plugins/fullcalendar/main.css" rel="stylesheet">
+    <link href="~/css/fullcanlenderstudent.css" rel="stylesheet">
+</head>
+<body>
+    <div class="container mt-5">
+        <div class="d-flex justify-content-end">
+            <div class="box-note">
+                <div class="item-note">
+                    <div class="color-box blue"></div>
+                    <span class="color-text">Đã học </span>
+                </div>
+                <div class="item-note mb-0">
+                    <div class="color-box a9a9a9"></div>
+                    <span class="color-text">Chưa học</span>
+                </div>
+            </div>
+        </div>
+        
+        <div id="calendar"></div>
+    </div>
+    <script src="~/plugins/fullcalendar/main.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            var calendarEl = document.getElementById('calendar');
+            var calendar = new FullCalendar.Calendar(calendarEl, {
+                initialView: 'dayGridMonth',
+                headerToolbar: {
+                    left: 'prev,next today',
+                    center: 'title',
+                    right: 'dayGridMonth,dayGridWeek'
+                }
+
+            });
+
+            var events = @Html.Raw(eventsJson);
+            calendar.batchRendering(function () {
+                events.forEach(function (event) {
+                    var backgroundColor = "";
+                    var textStatus = "";
+                    if (event.BeginClass == null) {
+                        backgroundColor = "#A9A9A9";
+                    } else {
+                        backgroundColor = "#3E94DB";
+                    }
+
+                    calendar.addEvent({
+                        
+                        title: event.Name + '\n'
+                        + event.TimeStart + ' - ' + event.TimeEnd
+                        +'\nPhòng: '+ event.Room
+                        + textStatus,
+                        /*url: '/Attendance',*/
+                        start: event.DateOnly,
+                        backgroundColor: backgroundColor
+                    });
+
+                });
+            });
+
+            calendar.render();
+        });
+
+
+    </script>
+</body>
+</html>

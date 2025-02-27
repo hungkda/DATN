@@ -1,0 +1,29 @@
+﻿@model IEnumerable<DATN.ViewModels.TimeTable>
+@{
+    ViewData["Title"] = "Home Page";
+}
+
+<div class="container mt-5">
+    @foreach (var item in Model)
+    {
+        <div class="card mb-3 shadow border rounded">
+            <div class="card-body fw-bold">
+                <h4 class="text-primary">
+                    Học phần: @item.TermName - Lớp: @item.TermClass
+                </h4>
+                <h6 class="card-title mb-1">
+                    Ngày: @if (item.DateLearn.HasValue)
+                    {
+                        @item.DateLearn.Value.ToShortDateString()
+                    }&nbsp;&nbsp;
+                    @if (item.DateLearn.HasValue)
+                    {
+                        @item.DateLearn.Value.ToShortTimeString()
+                    }&nbsp;&nbsp;
+                    Phòng học: @item.Room
+                </h6>
+                <p class="card-text fs-6 text-muted">Số sinh viên có mặt tại lớp: @item.PresentStudent/@item.TotalStudent</p>
+            </div>
+        </div>
+    }
+</div>

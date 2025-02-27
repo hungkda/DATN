@@ -1,0 +1,37 @@
+﻿.fc-event {
+    font-size: 0.85em;
+}
+
+.fc-event-title {
+    white-space: pre-line; /* Ensure the newline characters are interpreted as line breaks */
+}
+
+.item-note {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.color-box {
+    width: 10px;
+    height: 10px;
+    margin-right: 10px;
+}
+
+.a9a9a9 {
+    background-color: #A9A9A9;
+}
+
+.blue {
+    background-color: #3E94DB;
+}
+
+.color-text {
+    font-weight: bold;
+}
+
+.box-note {
+    border: 1px solid;
+    padding: 10px;
+    width: 10%;
+}

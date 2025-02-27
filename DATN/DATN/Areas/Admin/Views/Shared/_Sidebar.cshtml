@@ -1,0 +1,23 @@
+﻿@using Microsoft.AspNetCore.Http;
+@inject Microsoft.AspNetCore.Http.IHttpContextAccessor HttpContextAccessor
+@using Newtonsoft.Json;
+
+<div class="user-panel mt-3 pb-3 mb-3 d-flex">
+    <div class="image">
+        <img src="~/uploads/student/noavatar.jpg" class="rounded-circle" />
+    </div>
+    <div class="info">
+        @{
+            if (HttpContextAccessor.HttpContext.Session.GetString("AdminLogin") != null)
+            {
+                var user = JsonConvert.DeserializeObject<UserStaff>(HttpContextAccessor.HttpContext.Session.GetString("AdminLogin"));
+                <a href="#" class="d-block">@user.Username</a>
+                <a asp-action="Logout" asp-controller="Login">Logout</a>
+            }
+            else
+            {
+                <a href="#" class="d-block">Hoangvippro</a>
+            }
+        }
+    </div>
+</div>

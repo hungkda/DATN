@@ -1,0 +1,48 @@
+﻿html {
+    font-size: 13px;
+}
+
+
+@media (min-width: 991.98px) {
+}
+
+@media (max-width: 991.98px) {
+    html {
+        font-size: 12px;
+    }
+
+    .text-bold-mobile {
+        font-weight: bold;
+    }
+
+    .border-bot-mobile {
+        border-bottom: 1px solid #000000;
+    }
+}
+
+@media only screen and (max-width: 600px) {
+}
+
+.btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {
+    box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
+}
+
+html {
+    position: relative;
+    min-height: 100%;
+}
+
+body {
+    margin-bottom: 60px;
+}
+
+/*sticky- hiện đang dùng strong color-profile StudentInTerm*/
+.sticky-header {
+    position: -webkit-sticky;
+    position: sticky;
+    top: 0;
+    background-color: white;
+    z-index: 10;
+    border-bottom: 1px solid #dee2e6;
+    height: 2rem;
+}
