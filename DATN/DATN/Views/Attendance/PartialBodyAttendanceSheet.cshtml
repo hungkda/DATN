@@ -103,12 +103,20 @@
                     <div class="form-group">
                         <div class="form-group">
                             <label class="control-label">Phòng học</label>
-                            <select name="Room" class="form-control" asp-items="ViewBag.Room"></select>
+                            <select name="Room" class="form-control" required asp-items="ViewBag.Room"></select>
                         </div>
 
-                        <div class="form-group">
+                        @* <div class="form-group">
                             <label class="control-label">Ngày giờ ca học</label>
                             <select name="Timeline" class="form-control" asp-items="ViewBag.Timeline"></select>
+                        </div> *@
+                        <div class="form-group">
+                            <label class="control-label">Ngày giờ ca học</label>
+                            <input name="Timeline" type="datetime" required class="form-control" />
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label">Số tiết học</label>
+                            <input name="Lession" type="number" required class="form-control" />
                         </div>
                     </div>
                 </div>
@@ -156,7 +164,7 @@
                                 @foreach (var date in ViewBag.dateLearn)
                                 {
                                     <div class="col1of12 row text-center">
-                                        <strong>@date.DateLearn.ToString("dd/MM")</strong>
+                                        <strong>@date.TimeLine.ToString("dd/MM")</strong>
                                         <div class="col-6"><strong>DG</strong></div>
                                         <div class="col-6"><strong>CG</strong></div>
                                     </div>

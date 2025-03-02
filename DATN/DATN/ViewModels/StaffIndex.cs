@@ -12,5 +12,6 @@
         public int? TermClassNumber { get; set; }
         public string? Room { get; set; }
         public int? CollegeCredit { get; set; }
+        public string? Year { get; set; }
     }
 }

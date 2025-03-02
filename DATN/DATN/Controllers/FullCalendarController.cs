@@ -26,24 +26,24 @@ namespace DATN.Controllers
                               join term in _context.Terms on detailterm.Term equals term.Id
                               join datelearn in _context.DateLearns on detailterm.Id equals datelearn.DetailTerm
                               join room in _context.Rooms on datelearn.Room equals room.Id
-                              join timeline in _context.Timelines on datelearn.Timeline equals timeline.Id
                               join staffsubject in _context.StaffSubjects on staff.Id equals staffsubject.Staff
                               join subject in _context.Subjects on staffsubject.Subject equals subject.Id
                               where userstaff.Id == user_staff.Id
-                              group new { term, timeline, detailterm, room } by new
+                              group new { term, datelearn, detailterm, room } by new
                               {
                                   term.Name,
-                                  timeline.DateLearn,
+                                  datelearn.Timeline,
+                                  datelearn.Lession,
                                   roomName = room.Name,
                                   datelearn.Id
                               } into g
                               select new FullCalendarVM
                               {
                                   Name = g.Key.Name,
-                                  DateLearn = g.Key.DateLearn,
-                                  DateOnly = DateOnly.FromDateTime(g.Key.DateLearn.Value),
-                                  TimeStart = TimeOnly.FromDateTime(g.Key.DateLearn.Value),
-                                  TimeEnd = TimeOnly.FromDateTime(g.Key.DateLearn.Value).AddHours(3).AddMinutes(30),
+                                  DateLearn = g.Key.Timeline,
+                                  DateOnly = DateOnly.FromDateTime(g.Key.Timeline.Value),
+                                  TimeStart = TimeOnly.FromDateTime(g.Key.Timeline.Value),
+                                  TimeEnd = TimeOnly.FromDateTime(g.Key.Timeline.Value).AddMinutes((double)(55*g.Key.Lession - 5)),
                                   Room = g.Key.roomName,
                               }).ToListAsync();
 

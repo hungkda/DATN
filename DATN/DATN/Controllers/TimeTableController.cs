@@ -26,12 +26,11 @@ namespace DATN.Controllers
                              join term in _context.Terms on detailterm.Term equals term.Id
                              join datelearn in _context.DateLearns on detailterm.Id equals datelearn.DetailTerm
                              join room in _context.Rooms on datelearn.Room equals room.Id
-                             join timeline in _context.Timelines on datelearn.Timeline equals timeline.Id
                              join detailattendances in _context.DetailAttendances on datelearn.Id equals detailattendances.DateLearn
-                             where userstaff.Id == user_staff.Id && timeline.DateLearn.Value.Year == DateTime.Now.Year
-                             group new {timeline, detailterm, datelearn, detailattendances, room } by new
+                             where userstaff.Id == user_staff.Id /*&& timeline.DateLearn.Value.Year == DateTime.Now.Year*/
+                             group new { detailterm, datelearn, detailattendances, room } by new
                              {
-                                 timeline.DateLearn,
+                                 datelearn.Timeline,
                                  roomName = room.Name,
                                  datelearn.Id,
                                  term.Name,
@@ -39,7 +38,7 @@ namespace DATN.Controllers
                              } into g
                              select new TimeTable
                              {
-                                 DateLearn = g.Key.DateLearn,
+                                 DateLearn = g.Key.Timeline,
                                  Room = g.Key.roomName,
                                  PresentStudent = _context.DetailAttendances
                                                       .Count(da => da.DateLearn == g.Key.Id && (da.BeginClass == 1 || da.EndClass == 1)),

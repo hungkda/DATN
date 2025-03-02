@@ -50,10 +50,9 @@ namespace DATN.Controllers
                               join attendance in _context.Attendances on registstudent.Id equals attendance.RegistStudent
                               join detailattendance in _context.DetailAttendances on attendance.Id equals detailattendance.IdAttendance
                               join datelearn in _context.DateLearns on detailattendance.DateLearn equals datelearn.Id
-                              join timeline in _context.Timelines on datelearn.Timeline equals timeline.Id
                               join pointprocess in _context.PointProcesses on registstudent.Id equals pointprocess.RegistStudent
-                              where detailterm.Id == id && timeline.DateLearn.Value.Year == DateTime.Now.Year
-                              group new { student, timeline, attendance, pointprocess, detailterm, detailattendance } by new
+                              where detailterm.Id == id
+                              group new { student, attendance, pointprocess, detailterm, detailattendance } by new
                               {
                                   detailterm.Id,
                                   student.Code,
@@ -220,10 +219,9 @@ namespace DATN.Controllers
                               join attendance in _context.Attendances on registstudent.Id equals attendance.RegistStudent
                               join detailattendance in _context.DetailAttendances on attendance.Id equals detailattendance.IdAttendance
                               join datelearn in _context.DateLearns on detailattendance.DateLearn equals datelearn.Id
-                              join timeline in _context.Timelines on datelearn.Timeline equals timeline.Id
                               join pointprocess in _context.PointProcesses on registstudent.Id equals pointprocess.RegistStudent
-                              where detailterm.Id == id && timeline.DateLearn.Value.Year == DateTime.Now.Year
-                              group new { student, timeline, attendance, pointprocess, detailterm, detailattendance } by new
+                              where detailterm.Id == id /*&& timeline.DateLearn.Value.Year == DateTime.Now.Year*/
+                              group new { student, attendance, pointprocess, detailterm, detailattendance } by new
                               {
                                   detailterm.Id,
                                   student.Code,

@@ -29,7 +29,7 @@ namespace DATN.Areas.Admin.Controllers
             //số bản ghi trên 1 trang
             int limit = 10;
 
-            var dateLearn = await _context.DateLearns.Include(d => d.RoomNavigation).Include(d => d.DetailTermNavigation).Include(d => d.TimelineNavigation).OrderBy(c => c.Id).ToPagedListAsync(page, limit); ;
+            var dateLearn = await _context.DateLearns.Include(d => d.RoomNavigation).Include(d => d.DetailTermNavigation).OrderBy(c => c.Id).ToPagedListAsync(page, limit); ;
             return View(dateLearn);
         }
         // GET: Admin/DateLearns/Details/5
@@ -42,7 +42,6 @@ namespace DATN.Areas.Admin.Controllers
 
             var dateLearn = await _context.DateLearns
                 .Include(d => d.DetailTermNavigation)
-                .Include(d => d.TimelineNavigation)
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (dateLearn == null)
             {
@@ -50,7 +49,6 @@ namespace DATN.Areas.Admin.Controllers
             }
             ViewData["Room"] = new SelectList(_context.Rooms, "Id", "Name", dateLearn.Room);
             ViewData["DetailTerm"] = new SelectList(_context.DetailTerms, "Id", "TermClass", dateLearn.DetailTerm);
-            ViewData["Timeline"] = new SelectList(_context.Timelines, "Id", "DateLearn", dateLearn.Timeline);
             return View(dateLearn);
         }
 
@@ -58,7 +56,6 @@ namespace DATN.Areas.Admin.Controllers
         public async Task<IActionResult> Create()
         {
             ViewData["DetailTerm"] = new SelectList(_context.DetailTerms, "Id", "TermClass");
-            ViewData["Timeline"] = new SelectList(_context.Timelines, "Id", "DateLearn");
             ViewData["Room"] = new SelectList(_context.Rooms, "Id", "Name");
             return View();
         }
@@ -67,7 +64,7 @@ namespace DATN.Areas.Admin.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,DetailTerm,Room,Timeline,Status,CreateBy,UpdateBy,CreateDate,UpdateDate,IsDelete,IsActive")] DateLearn dateLearn, IFormCollection form)
+        public async Task<IActionResult> Create([Bind("Id,DetailTerm,Room,Timeline,Lession,Status,CreateBy,UpdateBy,CreateDate,UpdateDate,IsDelete,IsActive")] DateLearn dateLearn, IFormCollection form)
         {
             if (ModelState.IsValid)
             {
@@ -116,7 +113,6 @@ namespace DATN.Areas.Admin.Controllers
                 return RedirectToAction(nameof(Index));
             }
             ViewData["DetailTerm"] = new SelectList(_context.DetailTerms, "Id", "TermClass", dateLearn.DetailTerm);
-            ViewData["Timeline"] = new SelectList(_context.Timelines, "Id", "DateLearn", dateLearn.Timeline);
             ViewData["Room"] = new SelectList(_context.Rooms, "Id", "Name", dateLearn.Room);
             return View(dateLearn);
         }
@@ -136,7 +132,6 @@ namespace DATN.Areas.Admin.Controllers
             }
 
             ViewData["DetailTerm"] = new SelectList(_context.DetailTerms, "Id", "TermClass", dateLearn.DetailTerm);
-            ViewData["Timeline"] = new SelectList(_context.Timelines, "Id", "DateLearn", dateLearn.Timeline);
             ViewData["Room"] = new SelectList(_context.Rooms, "Id", "Name", dateLearn.Room);
             return View(dateLearn);
         }
@@ -146,7 +141,7 @@ namespace DATN.Areas.Admin.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(long id, [Bind("Id,DetailTerm,Room,Timeline,Status,CreateBy,UpdateBy,CreateDate,UpdateDate,IsDelete,IsActive")] DateLearn dateLearn)
+        public async Task<IActionResult> Edit(long id, [Bind("Id,DetailTerm,Room,Timeline,Lession,Status,CreateBy,UpdateBy,CreateDate,UpdateDate,IsDelete,IsActive")] DateLearn dateLearn)
         {
             if (id != dateLearn.Id)
             {
@@ -184,7 +179,6 @@ namespace DATN.Areas.Admin.Controllers
                 return RedirectToAction(nameof(Index));
             }
             ViewData["DetailTerm"] = new SelectList(_context.DetailTerms, "Id", "TermClass", dateLearn.DetailTerm);
-            ViewData["Timeline"] = new SelectList(_context.Timelines, "Id", "DateLearn", dateLearn.Timeline);
             ViewData["Room"] = new SelectList(_context.Rooms, "Id", "Name", dateLearn.Room);
             return View(dateLearn);
         }

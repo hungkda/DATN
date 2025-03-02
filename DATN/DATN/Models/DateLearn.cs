@@ -9,11 +9,12 @@ public partial class DateLearn
 
     public long? DetailTerm { get; set; }
 
-    public long? Timeline { get; set; }
+    public DateTime? Timeline { get; set; }
 
     public bool? Status { get; set; }
 
     public int? Room { get; set; }
+    public int? Lession { get; set; }
 
     public string? CreateBy { get; set; }
 
@@ -35,5 +36,4 @@ public partial class DateLearn
 
     public virtual Room? RoomNavigation { get; set; }
 
-    public virtual Timeline? TimelineNavigation { get; set; }
 }

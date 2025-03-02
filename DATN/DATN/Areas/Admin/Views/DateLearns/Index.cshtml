@@ -27,6 +27,9 @@
                 Ngày giờ ca học
             </th>
             <th>
+                Ngày giờ ca học
+            </th>
+            <th>
                 Hiển thị
             </th>
             <th>Tác vụ</th>
@@ -47,7 +50,10 @@
                     @Html.DisplayFor(modelItem => item.RoomNavigation.Name)
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.TimelineNavigation.DateLearn)
+                    @Html.DisplayFor(modelItem => item.Timeline)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Lession)
                 </td>
                 <td>
                     @if (item.IsActive == true)

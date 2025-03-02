@@ -106,16 +106,14 @@ namespace DATN.Areas.StudentArea.Controllers
                               join attendance in _context.Attendances on registstudent.Id equals attendance.RegistStudent
                               join detailattendance in _context.DetailAttendances on attendance.Id equals detailattendance.IdAttendance
                               join datelearn in _context.DateLearns on detailattendance.DateLearn equals datelearn.Id
-                              join timeline in _context.Timelines on datelearn.Timeline equals timeline.Id
                               where detailterm.Id == id
-                              group new { timeline, registstudent, datelearn, detailterm, attendance, detailattendance } by new
+                              group new { registstudent, datelearn, detailterm, attendance, detailattendance } by new
                               {
-                                  timeline.DateLearn,
+                                  datelearn.Timeline,
                               } into g
-                              select new Timeline
+                              select new DateLearn
                               {
-                                  DateLearn = g.Key.DateLearn,
-
+                                  Timeline = g.Key.Timeline,
                               }).ToListAsync();
 
             ViewBag.dateLearn = dateLearn;

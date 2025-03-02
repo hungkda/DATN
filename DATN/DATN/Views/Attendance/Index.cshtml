@@ -27,7 +27,8 @@
         <div class="col-2">Mã HP</div>
         <div class="col-3">Tên HP</div>
         <div class="col-2">Số sinh viên ĐK</div>
-        <div class="col-2">Số lớp</div>
+        <div class="col-1">Số lớp</div>
+        <div class="col-1">Năm</div>
         <div class="col-1">Số TC</div>
         <div class="col-1"></div>
     </div>
@@ -43,8 +44,11 @@
             <div class="col-2">
                 @item.StudentNumber
             </div>
-            <div class="col-2">
+            <div class="col-1">
                 @item.TermClassNumber
+            </div>
+            <div class="col-1">
+                @item.Year
             </div>
             <div class="col-1">@item.CollegeCredit</div>
             <div class="col-1 text-center">

@@ -36,16 +36,13 @@ namespace DATN.Controllers
                               join registstudents in _context.RegistStudents on detailterm.Id equals registstudents.DetailTerm
                               join term in _context.Terms on detailterm.Term equals term.Id
                               join datelearn in _context.DateLearns on detailterm.Id equals datelearn.DetailTerm
-                              join timeline in _context.Timelines on datelearn.Timeline equals timeline.Id
-                              join staffsubject in _context.StaffSubjects on staff.Id equals staffsubject.Staff
-                              join subject in _context.Subjects on staffsubject.Subject equals subject.Id
-                              where userstaff.Id == user_staff.Id && timeline.DateLearn.Value.Year == DateTime.Now.Year
-                              group new { term, staff, subject, detailterm, registstudents } by new
+                              where userstaff.Id == user_staff.Id /*&& timeline.DateLearn.Value.Year == DateTime.Now.Year*/
+                              group new { term, staff, detailterm, registstudents, datelearn } by new
                               {
                                   term.Id,
                                   term.Name,
                                   term.Code,
-                                  term.CollegeCredit
+                                  term.CollegeCredit,
                               } into g
                               select new StaffIndex
                               {
@@ -55,6 +52,7 @@ namespace DATN.Controllers
                                   StudentNumber = g.Select(x => x.registstudents.Student).Distinct().Count(),
                                   TermClassNumber = g.Select(x => x.detailterm.TermClass).Distinct().Count(),
                                   CollegeCredit = g.Key.CollegeCredit,
+                                  Year = g.Select(x => x.datelearn.Timeline.Value.Year.ToString()).FirstOrDefault(),
                               }).ToListAsync();
 
             var staffinfodata = await (from userstaff in _context.UserStaffs
@@ -140,15 +138,14 @@ namespace DATN.Controllers
                               join attendance in _context.Attendances on registstudent.Id equals attendance.RegistStudent
                               join detailattendance in _context.DetailAttendances on attendance.Id equals detailattendance.IdAttendance
                               join datelearn in _context.DateLearns on detailattendance.DateLearn equals datelearn.Id
-                              join timeline in _context.Timelines on datelearn.Timeline equals timeline.Id
                               where detailterm.Id == iddetailterm
-                              group new { timeline, registstudent, datelearn, detailterm, attendance, detailattendance } by new
+                              group new { registstudent, datelearn, detailterm, attendance, detailattendance } by new
                               {
-                                  timeline.DateLearn,
+                                  datelearn.Timeline,
                               } into g
-                              select new Timeline
+                              select new DateLearn
                               {
-                                  DateLearn = g.Key.DateLearn,
+                                  Timeline = g.Key.Timeline,
 
                               }).ToListAsync();
 
@@ -166,7 +163,6 @@ namespace DATN.Controllers
             ViewBag.dateLearn = dateLearn;
             ViewBag.countDateLearn = dateLearn.Count;
             ViewData["dataclassterm"] = new SelectList(dataclassterm, "Id", "TermClass");
-            ViewData["Timeline"] = new SelectList(_context.Timelines, "Id", "DateLearn");
             ViewData["Room"] = new SelectList(_context.Rooms, "Id", "Name");
             if (idselect != null)
             {
@@ -187,15 +183,14 @@ namespace DATN.Controllers
                               join attendance in _context.Attendances on registstudent.Id equals attendance.RegistStudent
                               join detailattendance in _context.DetailAttendances on attendance.Id equals detailattendance.IdAttendance
                               join datelearn in _context.DateLearns on detailattendance.DateLearn equals datelearn.Id
-                              join timeline in _context.Timelines on datelearn.Timeline equals timeline.Id
                               join student in _context.Students on registstudent.Student equals student.Id
-                              where detailterm.Id == id && timeline.DateLearn.Value.Date == DateTime.Now.Date
-                              group new { student, timeline, registstudent, datelearn, detailterm, attendance, detailattendance } by new
+                              where detailterm.Id == id /*&& timeline.DateLearn.Value.Date == DateTime.Now.Date*/
+                              group new { student, registstudent, datelearn, detailterm, attendance, detailattendance } by new
                               {
                                   student.Code,
                                   student.Name,
                                   student.BirthDate,
-                                  timeline.DateLearn,
+                                  datelearn.Timeline,
                                   student.Id,
                                   attendanceId = attendance.Id,
                                   detailtermId = detailterm.Id,
@@ -212,7 +207,7 @@ namespace DATN.Controllers
                                   StudentCode = g.Key.Code,
                                   StudentName = g.Key.Name,
                                   BirthDate = g.Key.BirthDate,
-                                  DateLearn = g.Key.DateLearn,
+                                  DateLearn = g.Key.Timeline,
                                   StudentId = g.Key.Id,
                                   AttendanceId = g.Key.attendanceId,
                                   DetailTermId = g.Key.detailtermId,
@@ -372,7 +367,8 @@ namespace DATN.Controllers
 
             var datelearnNew = new DateLearn();
             datelearnNew.DetailTerm = id;
-            datelearnNew.Timeline = long.Parse(form["Timeline"]);
+            datelearnNew.Timeline = DateTime.Parse(form["Timeline"]);
+            datelearnNew.Lession = int.Parse(form["Lession"]);
             datelearnNew.Status = true;
             datelearnNew.Room = int.Parse(form["Room"]);
             datelearnNew.CreateBy = admin.Username;
@@ -474,15 +470,14 @@ namespace DATN.Controllers
                               join attendance in _context.Attendances on registstudent.Id equals attendance.RegistStudent
                               join detailattendance in _context.DetailAttendances on attendance.Id equals detailattendance.IdAttendance
                               join datelearn in _context.DateLearns on detailattendance.DateLearn equals datelearn.Id
-                              join timeline in _context.Timelines on datelearn.Timeline equals timeline.Id
                               where detailterm.Id == id
-                              group new { timeline, registstudent, datelearn, detailterm, attendance, detailattendance } by new
+                              group new { registstudent, datelearn, detailterm, attendance, detailattendance } by new
                               {
-                                  timeline.DateLearn,
+                                  datelearn.Timeline,
                               } into g
-                              select new Timeline
+                              select new DateLearn
                               {
-                                  DateLearn = g.Key.DateLearn,
+                                  Timeline = g.Key.Timeline,
 
                               }).ToListAsync();
 
@@ -588,7 +583,7 @@ namespace DATN.Controllers
                     worksheet.Cells[8, i + 6, 8, i + 7].Style.Font.Bold = true;
 
                     worksheet.Cells[9, i + 6, 9, i + 7].Merge = true;
-                    worksheet.Cells[9, i + 6, 9, i + 7].Value = dateLearn[i/2].DateLearn?.ToString("dd/MM");
+                    worksheet.Cells[9, i + 6, 9, i + 7].Value = dateLearn[i/2].Timeline?.ToString("dd/MM");
                     worksheet.Cells[9, i + 6, 9, i + 7].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
 
                     worksheet.Cells[10, i + 6].Value = "ĐG";

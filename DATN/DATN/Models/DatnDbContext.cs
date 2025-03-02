@@ -53,8 +53,6 @@ public partial class DATNDbContext : DbContext
 
     public virtual DbSet<Term> Terms { get; set; }
 
-    public virtual DbSet<Timeline> Timelines { get; set; }
-
     public virtual DbSet<UserStaff> UserStaffs { get; set; }
 
     public virtual DbSet<UserStudent> UserStudents { get; set; }
@@ -164,8 +162,9 @@ public partial class DATNDbContext : DbContext
             entity.Property(e => e.IsAttendance).HasColumnName("IS_ATTENDANCE");
             entity.Property(e => e.IsDelete).HasColumnName("IS_DELETE");
             entity.Property(e => e.Room).HasColumnName("ROOM");
+            entity.Property(e => e.Lession).HasColumnName("LESSION");
             entity.Property(e => e.Status).HasColumnName("STATUS");
-            entity.Property(e => e.Timeline).HasColumnName("TIMELINE");
+            entity.Property(e => e.Timeline).HasColumnType("datetime").HasColumnName("TIMELINE");
             entity.Property(e => e.UpdateBy)
                 .HasMaxLength(450)
                 .HasColumnName("UPDATE_BY");
@@ -182,9 +181,6 @@ public partial class DATNDbContext : DbContext
                 .HasForeignKey(d => d.Room)
                 .HasConstraintName("FK_DATE_LEARN_ROOM");
 
-            entity.HasOne(d => d.TimelineNavigation).WithMany(p => p.DateLearns)
-                .HasForeignKey(d => d.Timeline)
-                .HasConstraintName("FK__DATE_LEAR__TIMEL__151B244E");
         });
 
         modelBuilder.Entity<DetailAttendance>(entity =>
@@ -858,39 +854,6 @@ public partial class DATNDbContext : DbContext
             entity.Property(e => e.Name)
                 .HasMaxLength(255)
                 .HasColumnName("NAME");
-            entity.Property(e => e.UpdateBy)
-                .HasMaxLength(450)
-                .HasColumnName("UPDATE_BY");
-            entity.Property(e => e.UpdateDate)
-                .HasDefaultValueSql("(getdate())")
-                .HasColumnType("datetime")
-                .HasColumnName("UPDATE_DATE");
-        });
-
-        modelBuilder.Entity<Timeline>(entity =>
-        {
-            entity.HasKey(e => e.Id).HasName("PK__TIMELINE__3214EC278EA3568D");
-
-            entity.ToTable("TIMELINE");
-
-            entity.Property(e => e.Id).HasColumnName("ID");
-            entity.Property(e => e.CreateBy)
-                .HasMaxLength(450)
-                .HasColumnName("CREATE_BY");
-            entity.Property(e => e.CreateDate)
-                .HasDefaultValueSql("(getdate())")
-                .HasColumnType("datetime")
-                .HasColumnName("CREATE_DATE");
-            entity.Property(e => e.DateLearn)
-                .HasColumnType("datetime")
-                .HasColumnName("DATE_LEARN");
-            entity.Property(e => e.Isactive)
-                .HasDefaultValueSql("((1))")
-                .HasColumnName("ISACTIVE");
-            entity.Property(e => e.Isdelete).HasColumnName("ISDELETE");
-            entity.Property(e => e.Status)
-                .HasDefaultValueSql("((1))")
-                .HasColumnName("STATUS");
             entity.Property(e => e.UpdateBy)
                 .HasMaxLength(450)
                 .HasColumnName("UPDATE_BY");

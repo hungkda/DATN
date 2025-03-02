@@ -29,13 +29,13 @@ namespace DATN.Areas.Controllers
                               join room in _context.Rooms on datelearn.Room equals room.Id
                               join detailterm in _context.DetailTerms on registstudent.DetailTerm equals detailterm.Id
                               join term in _context.Terms on detailterm.Term equals term.Id
-                              join timeline in _context.Timelines on datelearn.Timeline equals timeline.Id
                               /*join year in _context.Years on timeline.Year equals year.Id*/
                               where userstudent.Id == user_staff.Id
-                              group new { term, timeline, detailterm, detailattendance, room } by new
+                              group new { term, datelearn, detailterm, detailattendance, room } by new
                               {
                                   term.Name,
-                                  timeline.DateLearn,
+                                  datelearn.Timeline,
+                                  datelearn.Lession,
                                   room = room.Name,
                                   detailattendance.BeginClass,
                                   detailattendance.EndClass
@@ -43,10 +43,10 @@ namespace DATN.Areas.Controllers
                               select new ViewModels.FullCalendarVM
                               {
                                   Name = g.Key.Name,
-                                  DateLearn = g.Key.DateLearn,
-                                  DateOnly = DateOnly.FromDateTime(g.Key.DateLearn.Value),
-                                  TimeStart = TimeOnly.FromDateTime(g.Key.DateLearn.Value),
-                                  TimeEnd = TimeOnly.FromDateTime(g.Key.DateLearn.Value).AddHours(3).AddMinutes(30),
+                                  DateLearn = g.Key.Timeline,
+                                  DateOnly = DateOnly.FromDateTime(g.Key.Timeline.Value),
+                                  TimeStart = TimeOnly.FromDateTime(g.Key.Timeline.Value),
+                                  TimeEnd = TimeOnly.FromDateTime(g.Key.Timeline.Value).AddMinutes((double)(55*g.Key.Lession - 5)),
                                   Room = g.Key.room,
                                   BeginClass = g.Key.BeginClass,
                                   EndClass = g.Key.EndClass
