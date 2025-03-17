@@ -28,8 +28,6 @@ public partial class DateLearn
 
     public bool? IsActive { get; set; }
 
-    public bool? IsAttendance { get; set; }
-
     public virtual ICollection<DetailAttendance> DetailAttendances { get; set; } = new List<DetailAttendance>();
 
     public virtual DetailTerm? DetailTermNavigation { get; set; }

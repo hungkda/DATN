@@ -10,6 +10,7 @@ using DATN.Models;
 using Newtonsoft.Json;
 using NuGet.Packaging.Signing;
 using X.PagedList;
+using DATN.Areas.StudentArea.ViewModels;
 
 namespace DATN.Areas.Admin.Controllers
 {
@@ -37,6 +38,42 @@ namespace DATN.Areas.Admin.Controllers
             return View(student);
         }
 
+        public async Task<IActionResult> Score(long id)
+        {
+            var data = await (from userstudent in _context.UserStudents
+                              join student in _context.Students on userstudent.Student equals student.Id
+                              join pointprocesses in _context.PointProcesses on student.Id equals pointprocesses.Student
+                              join detailterm in _context.DetailTerms on pointprocesses.DetailTerm equals detailterm.Id
+                              join term in _context.Terms on detailterm.Term equals term.Id
+                              join semesters in _context.Semesters on detailterm.Semester equals semesters.Id
+                              where userstudent.Id == id
+                              group new { term, detailterm, semesters, pointprocesses } by new
+                              {
+                                  detailterm.Id,
+                                  termName = term.Name,
+                                  term.Code,
+                                  term.CollegeCredit,
+                                  semesters.Name,
+                                  pointprocesses.OverallScore,
+                              } into g
+                              select new StudentScore
+                              {
+                                  DetailTermId = g.Key.Id,
+                                  Semester = g.Key.Name,
+                                  TermCode = g.Key.Code,
+                                  TermName = g.Key.termName,
+                                  CollegeCredit = g.Key.CollegeCredit == null ? null : g.Key.CollegeCredit,
+                                  PointRange10 = g.Key.OverallScore,
+                                  PointRange4 = g.Key.OverallScore >= 8.5 ? 4.0 :
+                                                g.Key.OverallScore >= 7.0 ? 3.0 :
+                                                g.Key.OverallScore >= 5.5 ? 2.0 :
+                                                g.Key.OverallScore >= 4.0 ? 1.0 :
+                                                g.Key.OverallScore == null ? null : 0.0
+                              }).ToListAsync();
+            var studentF = await _context.Students.Where(c => c.Id == id).FirstOrDefaultAsync();
+            ViewBag.studentId = studentF.Name;
+            return View(data);
+        }
         // GET: Admin/Students/Details/5
         public async Task<IActionResult> Details(long? id)
         {

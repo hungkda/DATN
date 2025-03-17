@@ -29,7 +29,7 @@ namespace DATN.Areas.Admin.Controllers
             //số bản ghi trên 1 trang
             int limit = 10;
 
-            var dateLearn = await _context.DateLearns.Include(d => d.RoomNavigation).Include(d => d.DetailTermNavigation).OrderBy(c => c.Id).ToPagedListAsync(page, limit); ;
+            var dateLearn = await _context.DateLearns.Include(d => d.RoomNavigation).Include(d => d.DetailTermNavigation).OrderBy(c => c.Id).ToPagedListAsync(page, limit);
             return View(dateLearn);
         }
         // GET: Admin/DateLearns/Details/5

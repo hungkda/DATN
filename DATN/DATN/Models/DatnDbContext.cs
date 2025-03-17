@@ -33,7 +33,6 @@ public partial class DATNDbContext : DbContext
 
     public virtual DbSet<RegistStudent> RegistStudents { get; set; }
 
-    public virtual DbSet<Role> Roles { get; set; }
 
     public virtual DbSet<Room> Rooms { get; set; }
 
@@ -159,7 +158,6 @@ public partial class DATNDbContext : DbContext
             entity.Property(e => e.IsActive)
                 .HasDefaultValueSql("((1))")
                 .HasColumnName("IS_ACTIVE");
-            entity.Property(e => e.IsAttendance).HasColumnName("IS_ATTENDANCE");
             entity.Property(e => e.IsDelete).HasColumnName("IS_DELETE");
             entity.Property(e => e.Room).HasColumnName("ROOM");
             entity.Property(e => e.Lession).HasColumnName("LESSION");
@@ -418,36 +416,6 @@ public partial class DATNDbContext : DbContext
             entity.HasOne(d => d.StudentNavigation).WithMany(p => p.RegistStudents)
                 .HasForeignKey(d => d.Student)
                 .HasConstraintName("FK__REGIST_ST__STUDE__208CD6FA");
-        });
-
-        modelBuilder.Entity<Role>(entity =>
-        {
-            entity.HasKey(e => e.Id).HasName("PK__ROLE__3214EC2714B825AE");
-
-            entity.ToTable("ROLE");
-
-            entity.Property(e => e.Id).HasColumnName("ID");
-            entity.Property(e => e.CreateBy)
-                .HasMaxLength(450)
-                .HasColumnName("CREATE_BY");
-            entity.Property(e => e.CreateDate)
-                .HasDefaultValueSql("(getdate())")
-                .HasColumnType("datetime")
-                .HasColumnName("CREATE_DATE");
-            entity.Property(e => e.IsActive)
-                .HasDefaultValueSql("((1))")
-                .HasColumnName("IS_ACTIVE");
-            entity.Property(e => e.IsDelete).HasColumnName("IS_DELETE");
-            entity.Property(e => e.Name)
-                .HasMaxLength(255)
-                .HasColumnName("NAME");
-            entity.Property(e => e.UpdateBy)
-                .HasMaxLength(450)
-                .HasColumnName("UPDATE_BY");
-            entity.Property(e => e.UpdateDate)
-                .HasDefaultValueSql("(getdate())")
-                .HasColumnType("datetime")
-                .HasColumnName("UPDATE_DATE");
         });
 
         modelBuilder.Entity<Room>(entity =>

@@ -1,0 +1,81 @@
+﻿@model X.PagedList.IPagedList<DATN.Models.DateLearn>
+@using X.PagedList.Mvc.Core
+
+@{
+    ViewData["Title"] = "List Date Learn";
+    var stt = 0;
+}
+<h1 class="py-3">Danh sách lịch học của từng học phần</h1>
+
+<div class="form-inline d-flex justify-content-end mb-3">
+    <a asp-action="Create" class="btn btn-success"><i class="fa fa-plus"></i>Thêm mới</a>
+</div>
+<table class="table table-bordered table-hover bg-white">
+    <thead>
+        <tr>
+            <th>
+                STT
+            </th>
+            <th>
+                Tên lớp học phần
+            </th>
+            <th>
+                Phòng học
+            </th>
+            <th>
+                Ngày giờ ca học
+            </th>
+            <th>
+                Ngày giờ ca học
+            </th>
+            <th>
+                Hiển thị
+            </th>
+            <th>Tác vụ</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            stt++;
+            <tr>
+                <td>
+                    @stt
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.DetailTermNavigation.TermClass)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.RoomNavigation.Name)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Timeline)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Lession)
+                </td>
+                <td>
+                    @if (item.IsActive == true)
+                    {
+                        <span class="text-success">Active</span>
+                    }
+                    else
+                    {
+                        <span class="text-danger">Inactive</span>
+                    }
+                </td>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-warning btn-event text-white"><i class="fas fa-pen-square"></i></a>
+                    <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-success btn-event"><i class="fas fa-info-circle"></i></a>
+                    <a asp-action="Delete" asp-route-id="@item.Id" onclick="return confirm('Bạn có chắc muốn xóa mục này không?');" class="btn btn-danger btn-event"><i class="fas fa-trash"></i></a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+@Html.PagedListPager(Model, page => Url.Action("Index", new { page = page }), new X.PagedList.Web.Common.PagedListRenderOptions
+{
+    LiElementClasses = new string[] { "page-item" },
+    PageClasses = new string[] { "page-link" }
+})

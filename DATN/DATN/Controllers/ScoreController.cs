@@ -5,6 +5,8 @@ using DATN.Models;
 using DATN.ViewModels;
 using Newtonsoft.Json;
 using OfficeOpenXml;
+using OfficeOpenXml.Style;
+using System.Drawing;
 
 namespace DATN.Controllers
 {
@@ -285,7 +287,14 @@ namespace DATN.Controllers
                 worksheet.Cells[1, 5].Value = "Giữa kỳ";
                 worksheet.Cells[1, 6].Value = "Cuối môn";
                 worksheet.Cells[1, 7].Value = "TBM";
-
+                // Định dạng màu nền xanh dương cho dòng 1
+                using (var range = worksheet.Cells[1, 1, 1, 7])
+                {
+                    range.Style.Fill.PatternType = ExcelFillStyle.Solid;
+                    range.Style.Fill.BackgroundColor.SetColor(Color.LightBlue);
+                    range.Style.Font.Bold = true; // In đậm tiêu đề
+                    range.Style.HorizontalAlignment = ExcelHorizontalAlignment.Center; // Căn giữa nội dung
+                }
                 var dataCount = data.Count();
                 for (int i = 0; i < dataCount; i++)
                 {
@@ -297,7 +306,15 @@ namespace DATN.Controllers
                     worksheet.Cells[i + 2, 6].Value = data[i].TestScore;
                     worksheet.Cells[i + 2, 7].Value = data[i].OverallScore;
                 }
-
+                worksheet.Cells.AutoFitColumns();
+                // Áp dụng border cho toàn bộ bảng
+                using (var borderRange = worksheet.Cells[1, 1, dataCount + 1, 7])
+                {
+                    borderRange.Style.Border.Top.Style = ExcelBorderStyle.Thin;
+                    borderRange.Style.Border.Bottom.Style = ExcelBorderStyle.Thin;
+                    borderRange.Style.Border.Left.Style = ExcelBorderStyle.Thin;
+                    borderRange.Style.Border.Right.Style = ExcelBorderStyle.Thin;
+                }
                 var stream = new MemoryStream();
                 package.SaveAs(stream);
 

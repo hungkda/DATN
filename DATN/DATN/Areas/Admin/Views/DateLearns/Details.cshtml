@@ -5,7 +5,7 @@
     Layout = "~/Areas/Admin/Views/Shared/Admin.cshtml";
 }
 
-<h1>Thông tin lịch học của học phần</h1>
+<h1 class="py-3">Thông tin lịch học của học phần</h1>
 
 
 <div>
@@ -22,13 +22,18 @@
         </div>
         <div class="form-group">
             <label asp-for="Room" class="control-label">Phòng học</label>
-            <select asp-for="Room" class="form-control" asp-items="ViewBag.Room"></select>
+            <select asp-for="Room" class="form-control" readonly asp-items="ViewBag.Room"></select>
             <span asp-validation-for="Room" class="text-danger"></span>
         </div>
         <div class="form-group">
-            <label asp-for="Timeline" class="control-label">Ngày giờ ca học</label>
-            <select asp-for="Timeline" class="form-control" readonly asp-items="ViewBag.Timeline"></select>
+            <label class="control-label">Ngày giờ ca học</label>
+            <input asp-for="Timeline" class="form-control" readonly />
             <span asp-validation-for="Timeline" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <label class="control-label">Số tiết học</label>
+            <input asp-for="Lession" class="form-control" readonly />
+            <span asp-validation-for="Lession" class="text-danger"></span>
         </div>
         <div class="form-group">
             <label asp-for="Status" class="control-label">Trạng thái</label>

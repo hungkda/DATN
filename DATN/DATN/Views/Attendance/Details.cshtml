@@ -1,0 +1,217 @@
+﻿@model IEnumerable<DATN.ViewModels.StudentInTerm>
+@{
+    ViewData["Title"] = "Home Page";
+    var stt = 0;
+    var tab1 = 1;
+    var tab2 = 1 + (Model.Count() * 4);
+}
+
+<h1 class="py-3">Lớp: @ViewBag.TermName - @ViewBag.TermClassName</h1>
+
+<div class="container m-auto">
+    @* <form method="post" asp-action="Import" enctype="multipart/form-data">
+    <div>
+    <label>Upload Excel File</label>
+    <input type="file" name="file" />
+    </div>
+    <div class="d-flex justify-content-between mb-3">
+    <input type="submit" class="btn btn-primary" value="Nhập file excel" />
+    </div>
+    @foreach (var item in Model)
+    {
+    <input name="Id" value="@item.Id" hidden />
+    <input name="AttendanceId" value="@item.AttendanceId" hidden />
+    <input name="DetailTermId" value="@item.DetailTermId" hidden />
+    <input name="DateLearnId" value="@item.DateLearnId" hidden />
+    }
+    </form> *@
+    <form method="post" asp-action="StudentInTerm">
+        <div class="d-flex justify-content-between mb-3">
+            <input type="submit" onclick="return confirm('Bạn đã có chắc muốn sửa?');" class="btn btn-success" value="Save" />
+        </div>
+        <div class="card">
+            <div class="card-body">
+                <div class="d-lg-flex mb-3 sticky-header d-none row">
+                    <div class="col-5">
+                        <div class="row">
+                            <div class="col-2"><strong>STT</strong></div>
+                            <div class="col-4"><strong>Mã sinh viên</strong></div>
+                            <div class="col-6"><strong>Tên sinh viên</strong></div>
+                        </div>
+                    </div>
+
+                    <div class="col-2 text-center"><strong>Đầu giờ</strong></div>
+                    <div class="col-1">
+                    </div>
+                    <div class="col-2 text-center"><strong>Cuối giờ</strong></div>
+                    <div class="col-2 text-center"><strong>Ghi chú</strong></div>
+                    @* responsive khi màn hình dưới 960px *@
+                </div>
+                @foreach (var item in Model)
+                {
+                    var birthday = "";
+                    @if (item.BirthDate.HasValue)
+                    {
+                        birthday = item.BirthDate.Value.ToShortDateString();
+                    }
+                    stt++;
+                    <div class="row mb-0 border-bot-mobile mt-3 mt-lg-0">
+                        <div class="col-9 col-lg-5">
+                            <div class="row">
+                                <div class="col-2 d-lg-block d-none">@stt</div>
+                                <div class="col-4 col-lg-4 text-bold-mobile">@item.StudentCode</div>
+                                <div class="col-8 col-lg-6 text-bold-mobile">@item.StudentName</div>
+                            </div>
+                        </div>
+                        <div class="col-3 d-lg-none text-bold-mobile">@birthday</div>
+
+
+                        <div class="col-12 col-lg-2 mt-3 mt-lg-0">
+                            <div class="row">
+                                <div class="col-2 d-lg-none"><b>ĐG</b></div>
+                                <div class="col-8 col-lg-12">
+                                    <div class="row">
+                                        <div class="col-3 p-0">
+                                            <input type="radio" tabindex="@tab1" value="1" @(item.BeginClass == 1 ? "checked" : "") name="begin-@stt" id="begin1-@stt" required>
+                                            <label for="begin1-@stt" class="font-weight-normal">P</label>
+                                        </div>
+                                        <div class="col-3 p-0">
+                                            <input type="radio" tabindex="@tab1+1" value="4" @(item.BeginClass == 4 ? "checked" : "") name="begin-@stt" id="begin4-@stt">
+                                            <label for="begin4-@stt" class="font-weight-normal">P-</label>
+                                        </div>
+                                        <div class="col-3 p-0">
+                                            <input type="radio" tabindex="@tab1+2" value="2" @(item.BeginClass == 2 ? "checked" : "") name="begin-@stt" id="begin2-@stt">
+                                            <label for="begin2-@stt" class="font-weight-normal">A</label>
+                                        </div>
+                                        <div class="col-3 p-0">
+                                            <input type="radio" tabindex="@tab1+3" value="3" @(item.BeginClass == 3 ? "checked" : "") name="begin-@stt" id="begin3-@stt">
+                                            <label for="begin3-@stt" class="font-weight-normal">PA</label>
+                                        </div>
+
+                                    </div>
+                                </div>
+                                <div class="col-2 d-block d-lg-none">
+                                    <a onclick="showDescription(@stt)" class="btn btn-primary"><i class="fa-solid fa-pencil"></i></a>
+                                </div>
+
+                            </div>
+                        </div>
+                        <div class="col-1 d-none d-lg-block">
+                        </div>
+                        <div class="col-12 col-lg-2">
+                            <div class="row">
+                                <div class="col-2 d-lg-none"><b>CG</b></div>
+                                <div class="col-8 col-lg-12">
+                                    <div class="row">
+                                        <div class="col-3 p-0 px-lg-1">
+                                            <input type="radio" tabindex="@tab2" value="1" @(item.EndClass == 1 ? "checked" : "") name="end-@stt" id="end1-@stt" required>
+                                            <label for="end1-@stt" class="font-weight-normal">P</label>
+                                        </div>
+                                        <div class="col-3 p-0">
+                                            <input type="radio" tabindex="@tab2+1" value="4" @(item.EndClass == 4 ? "checked" : "") name="end-@stt" id="end4-@stt">
+                                            <label for="end4-@stt" class="font-weight-normal">P-</label>
+                                        </div>
+                                        <div class="col-3 p-0">
+                                            <input type="radio" tabindex="@tab2+2" value="2" @(item.EndClass == 2 ? "checked" : "") name="end-@stt" id="end2-@stt">
+                                            <label for="end2-@stt" class="font-weight-normal">A</label>
+                                        </div>
+                                        <div class="col-3 p-0">
+                                            <input type="radio" tabindex="@tab2+3" value="3" @(item.EndClass == 3 ? "checked" : "") name="end-@stt" id="end3-@stt">
+                                            <label for="end3-@stt" class="font-weight-normal">PA</label>
+                                        </div>
+
+                                    </div>
+
+                                </div>
+
+                            </div>
+                        </div>
+                        @* <div class="col-1">
+                    <input type="radio" value="1" @(item.Status == 1 ? "checked" : "") name="status-@stt" required>
+                    </div>
+                    <div class="col-1">
+                    <input type="radio" value="2" @(item.Status == 2 ? "checked" : "") name="status-@stt">
+                    </div>
+                    <div class="col-1">
+                    <input type="radio" value="3" @(item.Status == 3 ? "checked" : "") name="status-@stt">
+                    </div>
+                    <div class="col-1">
+                    <input type="radio" value="4" @(item.Status == 4 ? "checked" : "") name="status-@stt">
+                    </div> *@
+                        @* <div class="col-2">
+                    <select class="form-control" asp-for="@item.BeginClass" name="BeginClass">
+                    <option value="null"></option>
+                    <option value="1">Có mặt</option>
+                    <option value="2">Vắng</option>
+                    <option value="3">Phép</option>
+                    </select>
+                    </div>
+                    <div class="col-2">
+                    <select class="form-control" asp-for="@item.EndClass" name="EndClass">
+                    <option value="null"></option>
+                    <option value="1">Có mặt</option>
+                    <option value="2">Vắng</option>
+                    <option value="3">Phép</option>
+                    </select>
+                    </div> *@
+                        <div class="col-lg-2 col-12 d-lg-block d-none" id="description-@stt">
+                            <textarea asp-for="@item.Description" class="w-100" name="Description"></textarea>
+                        </div>
+                    </div>
+                    <input name="Id" value="@item.Id" hidden />
+                    <input name="AttendanceId" value="@item.AttendanceId" hidden />
+                    <input name="DetailTermId" value="@item.DetailTermId" hidden />
+                    <input name="DateLearnId" value="@item.DateLearnId" hidden />
+                    tab1 = tab1 + 4;
+                    tab2 = tab2 + 4;
+                }
+            </div>
+        </div>
+    </form>
+</div>
+
+@if (TempData["ErrorMessage"] != null)
+{
+    <div class="position-fixed top-0 end-0 p-3" style="z-index: 5">
+        <div class="toast bg-danger text-light" id="loginErrorToast" role="alert" aria-live="assertive" aria-atomic="true">
+            <div class="toast-header">
+                <strong class="me-auto">Thông báo</strong>
+                <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+            </div>
+            <div class="toast-body">
+                @TempData["ErrorMessage"]
+            </div>
+        </div>
+    </div>
+}
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        var toastElement = document.getElementById('loginErrorToast');
+        var toast = new bootstrap.Toast(toastElement);
+        toast.show();
+
+        // Đóng notification sau 5 giây
+        setTimeout(function () {
+            toast.hide();
+        }, 5000); // 5000 milliseconds = 5 seconds
+    });
+</script>
+
+<script>
+    function showDescription(stt) {
+        var descriptionElement = document.getElementById('description-' + stt);
+        if (descriptionElement.classList.contains('d-none')) {
+            descriptionElement.classList.remove('d-none');
+            descriptionElement.classList.add('d-block');
+        } else {
+            descriptionElement.classList.remove('d-block');
+            descriptionElement.classList.add('d-none');
+        }
+    }
+
+        //    document.getElementById('showListButton').addEventListener('click', function () {
+        //        var itemsInput = document.getElementById('itemsInput').value;
+        //        toggleList(itemsArray);
+        //    });
+</script>

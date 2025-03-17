@@ -81,51 +81,13 @@
             <a asp-action="StudentInTerm" asp-route-id="@ViewBag.detailTerm" class="btn btn-success p10 mr-3" value="">Điểm danh hôm nay</a>
             <a asp-controller="Score" asp-action="EnterScore" asp-route-id="@ViewBag.detailTerm" class="btn p10 mr-3 btn-primary">Nhập điểm</a>
             <a asp-action="Export" asp-route-id="@ViewBag.detailTerm" class="btn btn-primary p10 mr-3">Xuất file excel</a>
-            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
-                Thêm ngày học
-            </button>
+            <a asp-controller="Attendance" asp-action="ListDateLearn" asp-route-id="@ViewBag.detailTerm" class="btn p10 mr-3 btn-primary">Danh sách ngày điểm danh</a>
         </div>
         <div class="select mt-2 mt-lg-0">
             <select asp-items="@ViewBag.dataclassterm" name="class" id="choosetermclass">
             </select>
         </div>
         <input hidden name="detailTerm" value="@ViewBag.detailTerm" />
-    </div>
-    <!-- Modal create datelearn -->
-    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">Thêm mới ngày học</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <div class="form-group">
-                        <div class="form-group">
-                            <label class="control-label">Phòng học</label>
-                            <select name="Room" class="form-control" required asp-items="ViewBag.Room"></select>
-                        </div>
-
-                        @* <div class="form-group">
-                            <label class="control-label">Ngày giờ ca học</label>
-                            <select name="Timeline" class="form-control" asp-items="ViewBag.Timeline"></select>
-                        </div> *@
-                        <div class="form-group">
-                            <label class="control-label">Ngày giờ ca học</label>
-                            <input name="Timeline" type="datetime" required class="form-control" />
-                        </div>
-                        <div class="form-group">
-                            <label class="control-label">Số tiết học</label>
-                            <input name="Lession" type="number" required class="form-control" />
-                        </div>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Thoát</button>
-                    <input type="submit" asp-controller="Attendance" asp-action="CreateDateLearn" class="btn btn-primary p10" asp-route-id="@ViewBag.detailTerm" value="Thêm mới">
-                </div>
-            </div>
-        </div>
     </div>
     <div>
         <div class="card">
@@ -164,7 +126,7 @@
                                 @foreach (var date in ViewBag.dateLearn)
                                 {
                                     <div class="col1of12 row text-center">
-                                        <strong>@date.TimeLine.ToString("dd/MM")</strong>
+                                        <strong>@date.Timeline.ToString("dd/MM")</strong>
                                         <div class="col-6"><strong>DG</strong></div>
                                         <div class="col-6"><strong>CG</strong></div>
                                     </div>

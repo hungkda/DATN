@@ -103,6 +103,7 @@
             <td>
                 <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-warning btn-event text-white"><i class="fas fa-pen-square"></i></a>
                 <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-success btn-event"><i class="fas fa-info-circle"></i></a>
+                    <a asp-action="Score" asp-route-id="@item.Id" class="btn btn-default btn-event"><i class="fa-solid fa-clipboard-list"></i></a>
                 <a asp-action="Delete" asp-route-id="@item.Id" onclick="return confirm('Bạn có chắc muốn xóa mục này không?');" class="btn btn-danger btn-event"><i class="fas fa-trash"></i></a>
             </td>
         </tr>

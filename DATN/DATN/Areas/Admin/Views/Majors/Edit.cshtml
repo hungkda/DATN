@@ -6,7 +6,7 @@
     Layout = "~/Areas/Admin/Views/Shared/Admin.cshtml";
 }
 
-<h1>Sửa thông tin ngành học</h1>
+<h1 class="py-3">Sửa thông tin ngành học</h1>
 
 <hr />
 <div class="row">
@@ -16,12 +16,12 @@
             <input type="hidden" asp-for="Id" />
             <div class="form-group">
                 <label class="control-label">Mã ngành học</label>
-                <input asp-for="Code" class="form-control" />
+                <input asp-for="Code" required class="form-control" />
                 <span asp-validation-for="Code" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="Name" class="control-label">Tên ngành học</label>
-                <input asp-for="Name" class="form-control" />
+                <input asp-for="Name" required class="form-control" />
                 <span asp-validation-for="Name" class="text-danger"></span>
             </div>
             <div class="form-group d-none">

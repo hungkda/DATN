@@ -5,7 +5,7 @@
     Layout = "~/Areas/Admin/Views/Shared/Admin.cshtml";
 }
 
-<h1>Thêm mới giảng viên</h1>
+<h1 class="py-3">Thêm mới giảng viên</h1>
 
 
 <hr />
@@ -15,12 +15,12 @@
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
                 <label asp-for="Code" class="control-label">Mã giảng viên</label>
-                <input asp-for="Code" class="form-control" />
+                <input asp-for="Code" required class="form-control" />
                 <span asp-validation-for="Code" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="Name" class="control-label">Tên giảng viên</label>
-                <input asp-for="Name" class="form-control" />
+                <input asp-for="Name" required class="form-control" />
                 <span asp-validation-for="Name" class="text-danger"></span>
             </div>
             <div class="form-group">
@@ -30,7 +30,7 @@
             </div>
             <div class="form-group">
                 <label asp-for="NumberPhone" class="control-label">Số điện thoại</label>
-                <input asp-for="NumberPhone" class="form-control" />
+                <input asp-for="NumberPhone" required class="form-control" />
                 <span asp-validation-for="NumberPhone" class="text-danger"></span>
             </div>
             <div class="form-group">
@@ -43,7 +43,7 @@
             </div>
             <div class="form-group">
                 <label asp-for="Email" class="control-label">Email</label>
-                <input asp-for="Email" class="form-control" />
+                <input asp-for="Email" required class="form-control" />
                 <span asp-validation-for="Email" class="text-danger"></span>
             </div>
             <div class="form-group">

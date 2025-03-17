@@ -36,7 +36,7 @@ namespace DATN.Areas.Admin.Controllers
                              join position in _context.Positions on staff.Position equals position.Id
                              where userstaff.Username.Equals(model.Email)
                                 && userstaff.Password.Equals(pass)
-                                && position.Name.Equals("Phó Khoa")
+                                && (position.Id == 1 || position.Id == 2 || position.Id == 3)
                              select userstaff).FirstOrDefault();
 
             var data = dataLogin.ToJson();

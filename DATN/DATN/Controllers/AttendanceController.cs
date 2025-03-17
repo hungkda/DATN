@@ -13,6 +13,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
 using static System.Runtime.InteropServices.JavaScript.JSType;
+using X.PagedList;
 
 namespace DATN.Controllers
 {
@@ -184,7 +185,7 @@ namespace DATN.Controllers
                               join detailattendance in _context.DetailAttendances on attendance.Id equals detailattendance.IdAttendance
                               join datelearn in _context.DateLearns on detailattendance.DateLearn equals datelearn.Id
                               join student in _context.Students on registstudent.Student equals student.Id
-                              where detailterm.Id == id /*&& timeline.DateLearn.Value.Date == DateTime.Now.Date*/
+                              where detailterm.Id == id && datelearn.Timeline.Value.Date == DateTime.Now.Date
                               group new { student, registstudent, datelearn, detailterm, attendance, detailattendance } by new
                               {
                                   student.Code,
@@ -252,6 +253,251 @@ namespace DATN.Controllers
 
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
+        }
+
+        public async Task<IActionResult> ListDateLearn(long? id, int page = 1)
+        {
+            //số bản ghi trên 1 trang
+            int limit = 10;
+
+            var dateLearn = await _context.DateLearns.Include(d => d.RoomNavigation).Include(d => d.DetailTermNavigation).Where( d=> d.DetailTerm == id).OrderBy(c => c.Id).ToPagedListAsync(page, limit);
+            return View(dateLearn);
+        }
+
+        public async Task<IActionResult> Details(long? id)
+        {
+            var data = await (from term in _context.Terms
+                              join detailterm in _context.DetailTerms on term.Id equals detailterm.Term
+                              join registstudent in _context.RegistStudents on detailterm.Id equals registstudent.DetailTerm
+                              join attendance in _context.Attendances on registstudent.Id equals attendance.RegistStudent
+                              join detailattendance in _context.DetailAttendances on attendance.Id equals detailattendance.IdAttendance
+                              join datelearn in _context.DateLearns on detailattendance.DateLearn equals datelearn.Id
+                              join student in _context.Students on registstudent.Student equals student.Id
+                              where datelearn.Id == id
+                              group new { student, registstudent, datelearn, detailterm, attendance, detailattendance } by new
+                              {
+                                  student.Code,
+                                  student.Name,
+                                  student.BirthDate,
+                                  datelearn.Timeline,
+                                  student.Id,
+                                  attendanceId = attendance.Id,
+                                  detailtermId = detailterm.Id,
+                                  datelearnId = datelearn.Id,
+                                  detailattendance.BeginClass,
+                                  detailattendance.EndClass,
+                                  detailattendance.Description,
+                                  detailattendanceId = detailattendance.Id
+                              } into g
+                              orderby g.Key.Code
+                              select new StudentInTerm
+                              {
+                                  Id = g.Key.detailattendanceId,
+                                  StudentCode = g.Key.Code,
+                                  StudentName = g.Key.Name,
+                                  BirthDate = g.Key.BirthDate,
+                                  DateLearn = g.Key.Timeline,
+                                  StudentId = g.Key.Id,
+                                  AttendanceId = g.Key.attendanceId,
+                                  DetailTermId = g.Key.detailtermId,
+                                  DateLearnId = g.Key.datelearnId,
+                                  BeginClass = g.Key.BeginClass,
+                                  EndClass = g.Key.EndClass,
+                                  Description = g.Key.Description,
+                              }).ToListAsync();
+            var termName = (from term in _context.Terms
+                            join detailterm in _context.DetailTerms on term.Id equals detailterm.Term
+                            join registstudent in _context.RegistStudents on detailterm.Id equals registstudent.DetailTerm
+                            join attendance in _context.Attendances on registstudent.Id equals attendance.RegistStudent
+                            join detailattendance in _context.DetailAttendances on attendance.Id equals detailattendance.IdAttendance
+                            join datelearn in _context.DateLearns on detailattendance.DateLearn equals datelearn.Id
+                            where datelearn.Id == id
+                            select new NameTermWithIdDT
+                            {
+                                Id = detailterm.Id,
+                                Name = term.Name,
+                                TermClassName = detailterm.TermClass
+                            }).FirstOrDefault();
+            ViewBag.TermName = termName.Name;
+            ViewBag.TermClassName = termName.TermClassName;
+            return View(data);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Details(IFormCollection form)
+        {
+            int itemCount = form["AttendanceId"].Count;
+            for (int i = 0; i < itemCount; i++)
+            {
+                DetailAttendance attendancedetail = new DetailAttendance();
+                attendancedetail.Id = long.Parse(form["Id"][i]);
+                attendancedetail.IdAttendance = long.Parse(form["AttendanceId"][i]);
+                attendancedetail.DetailTerm = long.Parse(form["DetailTermId"][i]);
+                attendancedetail.DateLearn = long.Parse(form["DateLearnId"][i]);
+                attendancedetail.BeginClass = int.Parse(form["begin-" + (i + 1)].ToString());
+                attendancedetail.EndClass = int.Parse(form["end-" + (i + 1)].ToString());
+                attendancedetail.Description = form["Description"][i].ToString().ToString();
+
+                _context.Update(attendancedetail);
+
+            }
+
+            await _context.SaveChangesAsync();
+            return RedirectToAction(nameof(Index));
+        }
+
+        // GET: Admin/DateLearns/Create
+        public async Task<IActionResult> Create()
+        {
+            ViewData["DetailTerm"] = new SelectList(_context.DetailTerms, "Id", "TermClass");
+            ViewData["Room"] = new SelectList(_context.Rooms, "Id", "Name");
+            return View();
+        }
+        // POST: Admin/DateLearns/Create
+        // To protect from overposting attacks, enable the specific properties you want to bind to.
+        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Create([Bind("Id,DetailTerm,Room,Timeline,Lession,Status,CreateBy,UpdateBy,CreateDate,UpdateDate,IsDelete,IsActive")] DateLearn dateLearn, IFormCollection form)
+        {
+            if (ModelState.IsValid)
+            {
+                var userStaffSession = HttpContext.Session.GetString("StaffLogin");
+                if (string.IsNullOrEmpty(userStaffSession))
+                {
+                    // Handle the case where the session is missing
+                    return RedirectToAction(actionName: "Index", controllerName: "Login");
+                }
+
+                var admin = JsonConvert.DeserializeObject<UserStaff>(HttpContext.Session.GetString("StaffLogin"));
+                dateLearn.CreateBy = admin.Username;
+                dateLearn.UpdateBy = admin.Username;
+                dateLearn.IsDelete = false;
+
+                var detailtermId = dateLearn.DetailTerm;
+                _context.Add(dateLearn);
+                await _context.SaveChangesAsync();
+                var dataAttendance = await (from datelearn in _context.DateLearns
+                                            join detailterm in _context.DetailTerms on datelearn.DetailTerm equals detailterm.Id
+                                            join attendance in _context.Attendances on detailterm.Id equals attendance.DetailTerm
+                                            where detailterm.Id == detailtermId
+                                            group new { attendance } by new
+                                            {
+                                                attendance.Id,
+                                            } into g
+                                            select new Attendance
+                                            {
+                                                Id = g.Key.Id,
+                                            }).ToListAsync(); ;
+                foreach (var item in dataAttendance)
+                {
+                    DetailAttendance da = new DetailAttendance
+                    {
+                        IdAttendance = item.Id,
+                        DateLearn = dateLearn.Id,
+                        DetailTerm = dateLearn.DetailTerm,
+                        BeginClass = null,
+                        EndClass = null,
+                        Description = null
+                    };
+                    _context.Add(da);
+                }
+
+                await _context.SaveChangesAsync();
+                return RedirectToAction(nameof(ListDateLearn), new { id = dateLearn.DetailTerm });
+            }
+            ViewData["DetailTerm"] = new SelectList(_context.DetailTerms, "Id", "TermClass", dateLearn.DetailTerm);
+            ViewData["Room"] = new SelectList(_context.Rooms, "Id", "Name", dateLearn.Room);
+            return View(dateLearn);
+        }
+
+        // GET: Admin/DateLearns/Edit/5
+        public async Task<IActionResult> Edit(long? id)
+        {
+            if (id == null || _context.DateLearns == null)
+            {
+                return NotFound();
+            }
+
+            var dateLearn = await _context.DateLearns.FindAsync(id);
+            if (dateLearn == null)
+            {
+                return NotFound();
+            }
+
+            ViewData["DetailTerm"] = new SelectList(_context.DetailTerms, "Id", "TermClass", dateLearn.DetailTerm);
+            ViewData["Room"] = new SelectList(_context.Rooms, "Id", "Name", dateLearn.Room);
+            return View(dateLearn);
+        }
+
+        // POST: Admin/DateLearns/Edit/5
+        // To protect from overposting attacks, enable the specific properties you want to bind to.
+        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Edit(long id, [Bind("Id,DetailTerm,Room,Timeline,Lession,Status,CreateBy,UpdateBy,CreateDate,UpdateDate,IsDelete,IsActive")] DateLearn dateLearn)
+        {
+            if (id != dateLearn.Id)
+            {
+                return NotFound();
+            }
+
+            if (ModelState.IsValid)
+            {
+                try
+                {
+                    var userStaffSession = HttpContext.Session.GetString("StaffLogin");
+                    if (string.IsNullOrEmpty(userStaffSession))
+                    {
+                        // Handle the case where the session is missing
+                        return RedirectToAction(actionName: "Index", controllerName: "Login");
+                    }
+
+                    var user = JsonConvert.DeserializeObject<UserStaff>(HttpContext.Session.GetString("StaffLogin"));
+                    dateLearn.UpdateBy = user.Username;
+                    dateLearn.UpdateDate = DateTime.Now;
+                    _context.Update(dateLearn);
+                    await _context.SaveChangesAsync();
+                }
+                catch (DbUpdateConcurrencyException)
+                {
+                    if (!DateLearnExists(dateLearn.Id))
+                    {
+                        return NotFound();
+                    }
+                    else
+                    {
+                        throw;
+                    }
+                }
+                return RedirectToAction(nameof(ListDateLearn), new { id = dateLearn.DetailTerm });
+            }
+            ViewData["DetailTerm"] = new SelectList(_context.DetailTerms, "Id", "TermClass", dateLearn.DetailTerm);
+            ViewData["Room"] = new SelectList(_context.Rooms, "Id", "Name", dateLearn.Room);
+            return View(dateLearn);
+        }
+
+        // GET: Admin/DateLearns/Delete/5
+        public async Task<IActionResult> Delete(long? id)
+        {
+            if (_context.DateLearns == null)
+            {
+                return Problem("Entity set 'DATNDbContext.DateLearns'  is null.");
+            }
+            var dateLearn = await _context.DateLearns.FindAsync(id);
+            if (dateLearn != null)
+            {
+                _context.DateLearns.Remove(dateLearn);
+            }
+
+            await _context.SaveChangesAsync();
+            return RedirectToAction(nameof(Index));
+        }
+
+        private bool DateLearnExists(long id)
+        {
+            return (_context.DateLearns?.Any(e => e.Id == id)).GetValueOrDefault();
         }
 
         [HttpPost]
