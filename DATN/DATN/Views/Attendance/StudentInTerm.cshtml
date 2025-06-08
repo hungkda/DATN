@@ -1,13 +1,23 @@
 ﻿@model IEnumerable<DATN.ViewModels.StudentInTerm>
 @{
     ViewData["Title"] = "Home Page";
+    var checkBegin = ViewBag.Begin;
     var stt = 0;
     var tab1 = 1;
     var tab2 = 1 + (Model.Count() * 4);
 }
 
 <h1 class="py-3">Lớp: @ViewBag.TermName - @ViewBag.TermClassName</h1>
-
+<div class="row justify-content-end">
+    <div class="col-lg-2">
+        <div class="border shadow rounded p-3 ms-3">
+            <p><strong>P</strong>: Có mặt</p>
+            <p><strong>A</strong>: Vắng</p>
+            <p><strong>P-</strong>: Muộn</p>
+            <p><strong>PA</strong>: Phép</p>
+        </div>
+    </div>
+</div>
 <div class="container m-auto">
     @* <form method="post" asp-action="Import" enctype="multipart/form-data">
         <div>
@@ -104,7 +114,7 @@
                                 <div class="col-8 col-lg-12">
                                     <div class="row">
                                         <div class="col-3 p-0 px-lg-1">
-                                            <input type="radio" tabindex="@tab2" value="1" @(item.EndClass == 1 ? "checked" : "") name="end-@stt" id="end1-@stt" required>
+                                            <input type="radio" tabindex="@tab2" value="1" @(item.EndClass == 1 ? "checked" : "") name="end-@stt" id="end1-@stt" @(checkBegin ? "required":"")>
                                             <label for="end1-@stt" class="font-weight-normal">P</label>
                                         </div>
                                         <div class="col-3 p-0">

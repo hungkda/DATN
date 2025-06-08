@@ -12,11 +12,7 @@
         <form asp-action="Edit">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <input type="hidden" asp-for="Id" />
-            <div class="form-group">
-                <label asp-for="DetailTerm" class="control-label">Tên lớp học phần</label>
-                <select asp-for="DetailTerm" class="form-control" asp-items="ViewBag.DetailTerm"></select>
-                <span asp-validation-for="DetailTerm" class="text-danger"></span>
-            </div>
+            <input asp-for="DetailTerm" hidden class="form-control" asp-items="ViewBag.DetailTerm"/>
             <div class="form-group">
                 <label asp-for="Room" class="control-label">Phòng học</label>
                 <select asp-for="Room" class="form-control" asp-items="ViewBag.Room"></select>

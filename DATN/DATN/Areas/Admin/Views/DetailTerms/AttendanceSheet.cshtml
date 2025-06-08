@@ -1,0 +1,243 @@
+﻿@model IEnumerable<DATN.ViewModels.AttendanceSheet>
+@{
+    ViewData["Title"] = "AttendanceSheet";
+    Layout = "~/Areas/Admin/Views/Shared/Admin.cshtml";
+    var datelearns = ViewBag.dateLearn;
+    var stt = 0;
+    var dem = 0;
+}
+<style>
+    .scroll-container {
+        width: 100%;
+        overflow-x: auto; /* Only horizontal scrollbar */
+        overflow-y: hidden; /* Hide vertical scrollbar */
+    }
+
+    .content {
+        width: calc(7rem*@ViewBag.countDateLearn);
+    }
+
+    .height-3rem {
+        height: 3rem;
+    }
+
+    .col1of12 {
+        width: 7rem;
+    }
+
+    .select {
+        position: relative;
+        display: inline-block;
+        width: 250px;
+        font-size: 12px;
+    }
+
+        .select select {
+            width: 100%;
+            height: 100%;
+            padding: 10px 40px 10px 20px;
+            font-size: 12px;
+            border: 2px solid #ccc;
+            border-radius: 25px;
+            appearance: none;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            background: white;
+            outline: none;
+            transition: border-color 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+        }
+
+            .select select:hover {
+                border-color: #999;
+            }
+
+            .select select:focus {
+                border-color: #0066cc;
+                box-shadow: 0 0 8px rgba(0, 102, 204, 0.5);
+            }
+
+        .select:after {
+            content: "▼";
+            font-size: 16px;
+            color: #666;
+            position: absolute;
+            top: 50%;
+            right: 20px;
+            transform: translateY(-50%);
+            pointer-events: none;
+        }
+
+        .select option {
+            padding: 10px;
+        }
+
+    .p10 {
+        padding: 10px;
+    }
+</style>
+<h1 class="py-3">Học phần: @ViewBag.TermName</h1>
+<div class="row justify-content-end">
+    <div class="col-lg-2">
+        <div class="border shadow rounded p-3 ms-3">
+            <p><strong>P</strong>: Có mặt</p>
+            <p><strong>A</strong>: Vắng</p>
+            <p><strong>P-</strong>: Muộn</p>
+            <p><strong>PA</strong>: Phép</p>
+        </div>
+    </div>
+</div>
+<div class="container mt-5" id="viewToUpdate">
+    <form method="post" asp-action="AttendanceSheet">
+
+
+        <div class="d-flex flex-lg-row flex-column justify-content-between mb-3">
+            <div class="d-flex">
+                <a asp-action="EnterScore" asp-route-id="@ViewBag.detailTerm" class="btn p10 mr-3 btn-primary">Xem điểm</a>
+                <a asp-action="Export" asp-route-id="@ViewBag.detailTerm" class="btn btn-primary p10 mr-3">Xuất file excel</a>
+            </div>
+            <input hidden name="detailTerm" value="@ViewBag.detailTerm" />
+        </div>
+        <div>
+            <div class="card">
+                <div class="card-body">
+                    <div class="d-flex">
+                        <div class="col-5 col-lg-6 border border-top-0 border-bottom-0 border-left-0">
+                            <div class="row mb-3 height-3rem">
+                                <div class="col-1 d-lg-block d-none"><strong>STT</strong></div>
+                                <div class="col-3 d-lg-block d-none"><strong>MSV</strong></div>
+                                <div class="col-4 d-lg-block d-none"><strong>Tên SV</strong></div>
+                                <div class="col-3 d-lg-block d-none"><strong>Ngày sinh</strong></div>
+                                <div class="col-1 d-lg-block d-none text-center"><strong>CC</strong></div>
+                            </div>
+                            @foreach (var item in Model)
+                            {
+                                var total = (item.NumberOfBeginClassesAttended + item.NumberOfEndClassesAttended + (item.NumberOfBeginLate + item.NumberOfEndLate) / 2);
+                                stt++;
+                                <div class="row mb-3 item-js" id="item-@stt">
+                                    <div class="col-1 d-none d-lg-block">@stt</div>
+                                    <div class="col-12 col-lg-3">@item.StudentCode</div>
+                                    <div class="col-12 col-lg-4">@item.StudentName</div>
+                                    <div class="col-12 col-lg-3">@item.BirthDay?.ToShortDateString()</div>
+                                    <div class="col-12 col-lg-1 d-flex">
+                                        <span class="d-lg-none p-1">Chuyên cần: </span>
+                                        <div class="text-center p-1 px-2 @(((double)total / item.CountDateLearn) < 0.8 ? "a-color text-white" : "")">
+                                            @(Math.Round(total * 100 / item.CountDateLearn))
+                                        </div>
+                                    </div>
+                                </div>
+
+                            }
+                        </div>
+                        <div class="col-7 col-lg-6 scroll-container">
+                            <div class="content">
+                                <div class="row mb-3 justify-content-around">
+                                    @foreach (var date in ViewBag.dateLearn)
+                                    {
+                                        <div class="col1of12 row text-center">
+                                            <strong class="col-12">@date.Timeline.ToString("dd/MM")</strong>
+                                            <div class="col-6"><strong>DG</strong></div>
+                                            <div class="col-6"><strong>CG</strong></div>
+                                        </div>
+                                    }
+                                </div>
+                                @foreach (var item in Model)
+                                {
+                                    dem++;
+                                    <div class="row mb-3 justify-content-around align-items-center" id="date-@dem">
+                                        @for (int i = 0; i < item.ListBeginClass.Count; i++)
+                                        {
+                                            string statusText1 = "";
+                                            string textColor1 = "";
+                                            string bgColor1 = "";
+                                            string statusText2 = "";
+                                            string textColor2 = "";
+                                            string bgColor2 = "";
+
+                                            switch (item.ListBeginClass[i])
+                                            {
+                                                case 1:
+                                                    statusText1 = "P";
+                                                    break;
+                                                case 2:
+                                                    statusText1 = "A";
+                                                    bgColor1 = "a-color";
+                                                    textColor1 = "text-white";
+                                                    break;
+                                                case 3:
+                                                    statusText1 = "PA";
+                                                    bgColor1 = "pa-color";
+                                                    break;
+                                                case 4:
+                                                    statusText1 = "P-";
+                                                    bgColor1 = "bg-warning";
+                                                    break;
+                                                default:
+                                                    statusText1 = "";
+                                                    break;
+                                            }
+
+                                            switch (item.ListEndClass[i])
+                                            {
+                                                case 1:
+                                                    statusText2 = "P";
+                                                    break;
+                                                case 2:
+                                                    statusText2 = "A";
+                                                    bgColor2 = "a-color";
+                                                    textColor2 = "text-white";
+                                                    break;
+                                                case 3:
+                                                    statusText2 = "PA";
+                                                    bgColor2 = "pa-color";
+                                                    break;
+                                                case 4:
+                                                    statusText2 = "P-";
+                                                    bgColor2 = "bg-warning";
+                                                    break;
+                                                default:
+                                                    statusText2 = "";
+                                                    break;
+                                            }
+
+                                            <div class="col1of12 row text-center">
+                                                <div class="mb-0 col-6"><div class="@textColor1 @bgColor1 p-1">@statusText1</div></div>
+                                                <div class="mb-0 col-6"><div class="@textColor2 @bgColor2 p-1">@statusText2</div></div>
+                                            </div>
+                                        }
+                                    </div>
+                                }
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script type="text/javascript">
+    $(document).ready(function () {
+        // Khởi tạo hàm cập nhật chiều cao khi tải trang
+        updateHeights();
+        // Gọi hàm updateHeights khi kích thước cửa sổ thay đổi
+        window.onresize = updateHeights;
+        // Hàm cập nhật chiều cao của các phần tử
+        function updateHeights() {
+            var count = document.querySelectorAll('.item-js').length; // Thay .your-element-class bằng lớp CSS của các phần tử cần cập nhật chiều cao
+            for (let i = 1; i <= count; i++) {
+                var element = document.getElementById('item-' + i);
+                var elementday = document.getElementById('date-' + i);
+                // Kiểm tra sự tồn tại của các phần tử
+                if (element && elementday) {
+                    // Cập nhật chiều cao của elementday theo chiều cao của element
+                    elementday.style.height = element.offsetHeight + 'px';
+                }
+            }
+        }
+
+    });
+
+
+</script>

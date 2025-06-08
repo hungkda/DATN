@@ -4,11 +4,12 @@
 @{
     ViewData["Title"] = "List Date Learn";
     var stt = 0;
+    var detailTermId = ViewBag.detailTermId;
 }
 <h1 class="py-3">Danh sách lịch học của từng học phần</h1>
 
 <div class="form-inline d-flex justify-content-end mb-3">
-    <a asp-action="Create" class="btn btn-success"><i class="fa fa-plus"></i>Thêm mới</a>
+    <a asp-action="Create" asp-route-id="@detailTermId" class="btn btn-success"><i class="fa fa-plus"></i>Thêm mới</a>
 </div>
 <table class="table table-bordered table-hover bg-white">
     <thead>
@@ -26,7 +27,7 @@
                 Ngày giờ ca học
             </th>
             <th>
-                Ngày giờ ca học
+                Số tiết học
             </th>
             <th>
                 Hiển thị

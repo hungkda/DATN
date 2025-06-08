@@ -12107,11 +12107,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "E:\\study\\DATN\\Project\\DATN\\DATN\\DATN.csproj",
+      "projectUniqueName": "D:\\study\\DATN\\Project\\DATN\\DATN\\DATN.csproj",
       "projectName": "DATN",
-      "projectPath": "E:\\study\\DATN\\Project\\DATN\\DATN\\DATN.csproj",
+      "projectPath": "D:\\study\\DATN\\Project\\DATN\\DATN\\DATN.csproj",
       "packagesPath": "C:\\Users\\Administrator\\.nuget\\packages\\",
-      "outputPath": "E:\\study\\DATN\\Project\\DATN\\DATN\\obj\\",
+      "outputPath": "D:\\study\\DATN\\Project\\DATN\\DATN\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "C:\\Users\\Administrator\\AppData\\Roaming\\NuGet\\NuGet.Config",

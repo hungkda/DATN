@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "dNCLso8HqBs/fyBjo5TQUd+w+noSstsx6YPV5+mcuWz8qIRrTrSPYDVvO5xiDll2bWHApZ0HYNmu3RmkMslk6g==",
+  "dgSpecHash": "bwkbhpatrBFuqjvO7JaW31gRwDAKsGadvUex/0lieR5cr4jqrWzen8ix595+ZcIYHVo8zF391C0OpJtSs+CnQg==",
   "success": true,
-  "projectFilePath": "E:\\study\\DATN\\Project\\DATN\\DATN\\DATN.csproj",
+  "projectFilePath": "D:\\study\\DATN\\Project\\DATN\\DATN\\DATN.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\Administrator\\.nuget\\packages\\azure.core\\1.35.0\\azure.core.1.35.0.nupkg.sha512",
     "C:\\Users\\Administrator\\.nuget\\packages\\azure.identity\\1.10.3\\azure.identity.1.10.3.nupkg.sha512",

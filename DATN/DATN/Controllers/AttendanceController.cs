@@ -14,6 +14,7 @@ using System.Diagnostics;
 using System.Drawing;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 using X.PagedList;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 
 namespace DATN.Controllers
 {
@@ -226,6 +227,8 @@ namespace DATN.Controllers
                                 Name = term.Name,
                                 TermClassName = detailterm.TermClass
                             }).FirstOrDefault();
+            var checkBegin = data.FirstOrDefault()?.BeginClass.HasValue == true && data.FirstOrDefault()?.BeginClass != 0;
+            ViewBag.Begin = checkBegin;
             ViewBag.TermName = termName.Name;
             ViewBag.TermClassName = termName.TermClassName;
             return View(data);
@@ -243,8 +246,18 @@ namespace DATN.Controllers
                 attendancedetail.IdAttendance = long.Parse(form["AttendanceId"][i]);
                 attendancedetail.DetailTerm = long.Parse(form["DetailTermId"][i]);
                 attendancedetail.DateLearn = long.Parse(form["DateLearnId"][i]);
+                
                 attendancedetail.BeginClass = int.Parse(form["begin-"+(i+1)].ToString());
-                attendancedetail.EndClass = int.Parse(form["end-"+(i+1)].ToString());
+                if (!form.ContainsKey("end-" + (i + 1)) || string.IsNullOrWhiteSpace(form["end-" + (i + 1)]))
+                {
+                    // Key không tồn tại hoặc giá trị rỗng/trắng
+                    // Xử lý logic ở đây, ví dụ:
+                    attendancedetail.EndClass = null; // nếu là nullable int
+                }
+                else
+                {
+                    attendancedetail.EndClass = int.Parse(form["end-" + (i + 1)].ToString());
+                }
                 attendancedetail.Description = form["Description"][i].ToString().ToString();
 
                 _context.Update(attendancedetail);
@@ -261,6 +274,7 @@ namespace DATN.Controllers
             int limit = 10;
 
             var dateLearn = await _context.DateLearns.Include(d => d.RoomNavigation).Include(d => d.DetailTermNavigation).Where( d=> d.DetailTerm == id).OrderBy(c => c.Id).ToPagedListAsync(page, limit);
+            ViewBag.detailTermId = id;
             return View(dateLearn);
         }
 
@@ -348,10 +362,11 @@ namespace DATN.Controllers
         }
 
         // GET: Admin/DateLearns/Create
-        public async Task<IActionResult> Create()
+        public async Task<IActionResult> Create(long? id)
         {
             ViewData["DetailTerm"] = new SelectList(_context.DetailTerms, "Id", "TermClass");
             ViewData["Room"] = new SelectList(_context.Rooms, "Id", "Name");
+            ViewBag.detailTermId = id;
             return View();
         }
         // POST: Admin/DateLearns/Create
@@ -371,12 +386,18 @@ namespace DATN.Controllers
                 }
 
                 var admin = JsonConvert.DeserializeObject<UserStaff>(HttpContext.Session.GetString("StaffLogin"));
-                dateLearn.CreateBy = admin.Username;
-                dateLearn.UpdateBy = admin.Username;
-                dateLearn.IsDelete = false;
+                DateLearn newDateLearn = new DateLearn();
+                newDateLearn.Room = dateLearn.Room;
+                newDateLearn.Timeline = dateLearn.Timeline;
+                newDateLearn.Lession = dateLearn.Lession;
+                newDateLearn.Status = dateLearn.Status;
+                newDateLearn.DetailTerm = long.Parse(form["DetailTermId"]);
+                newDateLearn.CreateBy = admin.Username;
+                newDateLearn.UpdateBy = admin.Username;
+                newDateLearn.IsDelete = false;
 
-                var detailtermId = dateLearn.DetailTerm;
-                _context.Add(dateLearn);
+                var detailtermId = newDateLearn.DetailTerm;
+                _context.Add(newDateLearn);
                 await _context.SaveChangesAsync();
                 var dataAttendance = await (from datelearn in _context.DateLearns
                                             join detailterm in _context.DetailTerms on datelearn.DetailTerm equals detailterm.Id
@@ -395,8 +416,8 @@ namespace DATN.Controllers
                     DetailAttendance da = new DetailAttendance
                     {
                         IdAttendance = item.Id,
-                        DateLearn = dateLearn.Id,
-                        DetailTerm = dateLearn.DetailTerm,
+                        DateLearn = newDateLearn.Id,
+                        DetailTerm = newDateLearn.DetailTerm,
                         BeginClass = null,
                         EndClass = null,
                         Description = null
@@ -405,7 +426,7 @@ namespace DATN.Controllers
                 }
 
                 await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(ListDateLearn), new { id = dateLearn.DetailTerm });
+                return RedirectToAction(nameof(ListDateLearn), new { id = newDateLearn.DetailTerm });
             }
             ViewData["DetailTerm"] = new SelectList(_context.DetailTerms, "Id", "TermClass", dateLearn.DetailTerm);
             ViewData["Room"] = new SelectList(_context.Rooms, "Id", "Name", dateLearn.Room);

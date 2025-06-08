@@ -1,0 +1,93 @@
+﻿@model IEnumerable<DATN.ViewModels.EnterScore>
+@{
+    ViewData["Title"] = "Home Page";
+    Layout = "~/Areas/Admin/Views/Shared/Admin.cshtml";
+    var stt = 0;
+}
+
+<h1 class="py-3">Nhập điểm: @ViewBag.TermName - @ViewBag.TermClassName</h1>
+<div class="row justify-content-end">
+    <div class="col-lg-2">
+        <div class="border shadow rounded p-3 ms-3">
+            <p><strong>CC</strong>: Chuyên cần</p>
+            <p><strong>TX1</strong>: Thường xuyên 1</p>
+            <p><strong>TX2</strong>: Thường xuyên 2</p>
+            <p><strong>CK</strong>: Cuối kỳ</p>
+            <p><strong>TBC</strong>: Trung bình cộng</p>
+        </div>
+    </div>
+</div>
+<div class="container mt-5">
+    <form method="post" asp-action="EnterScore">
+        <div class="text-end mb-3 d-flex justify-content-between">
+            <a asp-action="ExportScore" asp-route-id="@Model.FirstOrDefault().DetailTermId" class="btn btn-primary">Xuất file excel</a>
+            <input type="submit" onclick="return confirm('Bạn đã nhập điểm xong?');" class="btn btn-success" value="Lưu thay đổi" />
+        </div>
+        <div class="card">
+            <div class="card-body">
+                <div class="row mb-3 sticky-header d-none d-lg-flex">
+                    <div class="col-1 d-none d-lg-block"><strong>STT</strong></div>
+                    <div class="col-2 d-none d-lg-block"><strong>Mã sinh viên</strong></div>
+                    <div class="col-2 d-none d-lg-block"><strong>Tên sinh viên</strong></div>
+                    <div class="col-2 d-none d-lg-block"><strong>Ngày sinh</strong></div>
+
+                    <div class="col-5 d-none d-lg-block">
+                        <div class="d-flex justify-content-around">
+                            <div class="mx-3 text-center"><strong>CC</strong></div>
+                            <div class="mx-3 text-center"><strong>TX1</strong></div>
+                            <div class="mx-3 text-center"><strong>TX2</strong></div>
+                            <div class="mx-3 text-center"><strong>CK</strong></div>
+                            <div class="mx-3 text-center"><strong>TBC</strong></div>
+                        </div>
+                    </div>
+                </div>
+                @foreach (var item in Model)
+                {
+                    stt++;
+                    <div class="row mb-3 border-bot-mobile">
+                        <div class="col-1 d-none d-lg-block">@stt</div>
+                        <div class="col-3 col-lg-2">@item.StudentCode</div>
+                        <div class="col-5 col-lg-2">@item.StudentName</div>
+                        <div class="col-4 col-lg-2">@item.BirthDate?.ToShortDateString()</div>
+                        <div class="col-12 col-lg-5 mt-2 mb-3 m-lg-0">
+                            <div class="d-flex justify-content-around">
+                                <div class="mx-1 mx-lg-3 d-flex flex-column">
+                                    <label for="CC-@stt" class="d-lg-none mr-1 mb-0 align-content-center font-weight-normal text-center">CC</label>
+                                    <input id="CC-@stt" value="@(Math.Round((item.AttendancePoint ?? 0.0) * 10, 1))" class="form-control text-center" readonly>
+                                </div>
+                                <div class="mx-1 mx-lg-3 d-flex flex-column">
+                                    <label for="TP-@stt" class="d-lg-none mr-1 mb-0 align-content-center font-weight-normal text-center">TP</label>
+                                    <input id="TP-@stt" asp-for="@item.ComponentPoint" class="form-control text-center" readonly name="ComponentPoint">
+                                </div>
+                                <div class="mx-1 mx-lg-3 d-flex flex-column">
+                                    <label for="GK-@stt" class="d-lg-none mr-1 mb-0 align-content-center font-weight-normal text-center">GK</label>
+                                    <input id="GK-@stt" asp-for="@item.MidtermPoint" class="form-control text-center" readonly name="MidtermPoint">
+                                </div>
+                                <div class="mx-1 mx-lg-3 d-flex flex-column">
+                                    <label for="CK-@stt" class="d-lg-none mr-1 mb-0 align-content-center font-weight-normal text-center">CK</label>
+                                    <input id="CK-@stt" asp-for="@item.TestScore" class="form-control text-center" name="TestScore">
+                                </div>
+                                <div class="ms-1 mx-lg-3 d-flex flex-column">
+                                    <label for="TBC-@stt" class="d-lg-none mr-1 mb-0 align-content-center font-weight-normal text-center">TBC</label>
+                                    <input id="TBC-@stt" value="@item.OverallScore" class="form-control text-center" readonly>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <input asp-for="@item.PointId" name="PointId" hidden />
+                    <input asp-for="@item.Student" name="Student" hidden />
+                    <input asp-for="@item.DetailTerm" name="DetailTerm" hidden />
+                    <input asp-for="@item.RegistStudent" name="RegistStudent" hidden />
+                    <input asp-for="@item.Attendance" name="Attendance" hidden />
+                    <input asp-for="@item.NumberTest" name="NumberTest" hidden />
+                    <input asp-for="@item.CreateBy" name="CreateBy" hidden />
+                    <input asp-for="@item.UpdateBy" name="UpdateBy" hidden />
+                    <input asp-for="@item.CreateDate" name="CreateDate" hidden />
+                    <input asp-for="@item.IsActive" name="IsActive" hidden />
+                    <input asp-for="@item.IsDelete" name="IsDelete" hidden />
+                    <input asp-for="@item.AttendancePoint" name="AttendancePoint" hidden />
+                }
+            </div>
+        </div>
+    </form>
+</div>

@@ -1,0 +1,31 @@
+﻿
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Teacher Login</title>
+
+    <link href="~/lib/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="~/css/login.css" rel="stylesheet" />
+</head>
+<body class="hold-transition login-page">
+    <div class="login-container">
+        <div class="card login-card">
+            <div class="logo">Bạn là</div>
+            <a asp-area="Admin" asp-controller="Dashboard" class="btn btn-primary my-2">Quản trị viên</a>
+            <a asp-controller="Attendance" class="btn btn-primary my-2">Giảng viên</a>
+            <a asp-area="StudentArea" asp-controller="Dashboard" class="btn btn-primary my-2">Sinh viên</a>
+        </div>
+    </div>
+
+    <!-- jQuery -->
+    <script src="~/plugins/jquery/jquery.min.js"></script>
+    <!-- Bootstrap 4 -->
+    <script src="~/lib/bootstrap/dist/js/bootstrap.min.js"></script>
+</body>
+</html>
